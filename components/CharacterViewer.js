@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useSpring } from '@react-spring/web';
+import Lighting from './Lighting';
+import ModelViewer from './ModelViewer';
+import CameraController from './CameraController';
 
 // 요소별 컬러 세트
 const COLOR_SETS = [
@@ -35,7 +37,6 @@ export default function CharacterViewer() {
   const cameraRef = useRef();
   const rendererRef = useRef();
   const sceneRef = useRef();
-  const lightRef = useRef();
   const spotTargetRef = useRef();
   const modelRef = useRef();
   const colorTimer = useRef();
@@ -122,6 +123,7 @@ export default function CharacterViewer() {
     });
   }, [colorIdx]);
 
+  // three.js scene/camera/renderer 초기화
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -135,50 +137,6 @@ export default function CharacterViewer() {
     renderer.setSize(width, height);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
-
-    // 조명
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-    scene.add(ambientLight);
-    // SpotLight
-    const spotTarget = new THREE.Object3D();
-    spotTarget.position.set(CAMERA_PRESETS[0].look.x, CAMERA_PRESETS[0].look.y, CAMERA_PRESETS[0].look.z);
-    scene.add(spotTarget);
-    spotTargetRef.current = spotTarget;
-    const spotLight = new THREE.SpotLight(0xffffff, 10, 30, Math.PI / 6, 0.2, 1);
-    spotLight.position.set(0, 2, 6);
-    spotLight.target = spotTarget;
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-    lightRef.current = spotLight;
-    // 백라이트
-    const backLight = new THREE.DirectionalLight(0xfff2cc, 1);
-    backLight.position.set(0, 2, -6);
-    scene.add(backLight);
-
-    // GLTF 모델 로드
-    const loader = new GLTFLoader();
-    loader.load('/3d/kikiki.glb', (gltf) => {
-      const model = gltf.scene;
-      model.position.set(0, -1.2, 0);
-      model.scale.set(1.1, 1.1, 1.1);
-      scene.add(model);
-      modelRef.current = model;
-      // 원래색 저장
-      model.traverse((child) => {
-        if (child.isMesh && child.material) {
-          originalColors.current[child.uuid] = child.material.color.clone();
-        }
-      });
-      camera.position.set(CAMERA_PRESETS[0].pos.x, CAMERA_PRESETS[0].pos.y, CAMERA_PRESETS[0].pos.z);
-      camera.lookAt(CAMERA_PRESETS[0].look.x, CAMERA_PRESETS[0].look.y, CAMERA_PRESETS[0].look.z);
-      renderer.render(scene, camera);
-      // 컬러 적용
-      applyColor(colorIdx);
-    });
-
-    camera.position.set(CAMERA_PRESETS[0].pos.x, CAMERA_PRESETS[0].pos.y, CAMERA_PRESETS[0].pos.z);
-    camera.lookAt(CAMERA_PRESETS[0].look.x, CAMERA_PRESETS[0].look.y, CAMERA_PRESETS[0].look.z);
-
     // 리사이즈 대응
     const handleResize = () => {
       const newWidth = window.innerWidth;
@@ -189,30 +147,13 @@ export default function CharacterViewer() {
       renderer.render(scene, camera);
     };
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
       if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-    // eslint-disable-next-line
   }, []);
-
-  // 카메라 위치/타겟 스프링 적용
-  useEffect(() => {
-    let raf;
-    function animate() {
-      if (!cameraRef.current || !rendererRef.current || !sceneRef.current || !spotTargetRef.current) return;
-      cameraRef.current.position.set(springProps.camX.get(), springProps.camY.get(), springProps.camZ.get());
-      cameraRef.current.lookAt(springProps.lookX.get(), springProps.lookY.get(), springProps.lookZ.get());
-      spotTargetRef.current.position.set(springProps.lookX.get(), springProps.lookY.get(), springProps.lookZ.get());
-      rendererRef.current.render(sceneRef.current, cameraRef.current);
-      raf = requestAnimationFrame(animate);
-    }
-    animate();
-    return () => raf && cancelAnimationFrame(raf);
-  }, [springProps]);
 
   const handleColorSlide = (dir) => {
     setColorIdx((prev) => {
@@ -227,6 +168,10 @@ export default function CharacterViewer() {
   return (
     <>
       <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0 }} />
+      {/* 3D 요소 분리 컴포넌트 */}
+      <Lighting scene={sceneRef.current} camera={cameraRef.current} spotTargetRef={spotTargetRef} />
+      <ModelViewer scene={sceneRef.current} camera={cameraRef.current} colorIdx={colorIdx} COLOR_SETS={COLOR_SETS} originalColors={originalColors} applyColor={applyColor} modelRef={modelRef} />
+      <CameraController cameraRef={cameraRef} springProps={springProps} spotTargetRef={spotTargetRef} rendererRef={rendererRef} sceneRef={sceneRef} />
       <button onClick={() => handleColorSlide('left')}
         style={{
           position: 'fixed',
