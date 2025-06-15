@@ -15,9 +15,9 @@ const CAMERA_PRESETS = [
   // 기본 뷰
   { pos: { x: 2.2, y: -1.2, z: 1.9 }, look: { x: 0.7, y: -1.1, z: 0.4 } },
   // 얼굴 클로즈업 1
-  { pos: { x: 0.8, y: -0.7, z: 0.9 }, look: { x: 0.5, y: -1.0, z: 0.4 } },
+  { pos: { x: 1, y: -0.5, z: 0.9 }, look: { x: 0.5, y: -0.7, z: 0.4 } },
   // 얼굴 클로즈업 2 (약간 아래에서)
-  { pos: { x: 0.5, y: -0.8, z: 0.5 }, look: { x: 0, y: -0.8, z: 0 } },
+  { pos: { x: 0.5, y: -1, z: 0.5 }, look: { x: 0, y: -0.9, z: 0 } },
 ];
 
 export default function CharacterViewer() {
