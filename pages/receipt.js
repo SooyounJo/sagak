@@ -44,6 +44,15 @@ export default function ReceiptPage() {
   const [done, setDone] = useState(false);
   const intervalRef = useRef(null);
   const [showNext, setShowNext] = useState(false);
+  const [selectedEnv, setSelectedEnv] = useState(null); // 'school' | 'work' | 'friend'
+  const [emotion, setEmotion] = useState(null); // 감정 선택
+
+  // 환경별 모델 경로
+  const ENV_MODEL = {
+    school: 'stu/student.glb',
+    work: 'public/work/worker.glb',
+    friend: 'fri/friend.glb',
+  };
 
   // 애니메이션 끝나면 로딩 시퀀스 시작
   const handleAnimFinish = () => {
@@ -98,7 +107,7 @@ export default function ReceiptPage() {
       {/* 좌측 3분의 2에 3D GLB 모델 (애니메이션/교체) */}
       <div style={{ flex: 2, height: '100vh', position: 'relative', overflow: 'hidden' }}>
         <GLBPersonaAnimation
-          src={LOADING_STEPS[step].glb}
+          src={selectedEnv ? ENV_MODEL[selectedEnv] : LOADING_STEPS[step].glb}
           animate={step === 0 && animate}
           onFinish={handleAnimFinish}
           step={step}
@@ -120,16 +129,31 @@ export default function ReceiptPage() {
           </div>
         )}
         {/* 완료 2초 후 다음 질문/버튼 */}
-        {done && showNext && (
+        {done && showNext && !selectedEnv && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 22, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
               이번에 만들 자아는<br/>어떤 환경에 놓여있나요?
             </div>
             <div style={{ display: 'flex', gap: 16 }}>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>학교</button>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>회사</button>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>이외의 인간관계</button>
+              <button onClick={() => setSelectedEnv('school')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>학교</button>
+              <button onClick={() => setSelectedEnv('work')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>회사</button>
+              <button onClick={() => setSelectedEnv('friend')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>이외의 인간관계</button>
             </div>
+          </div>
+        )}
+        {/* 환경 선택 후 감정 선택 및 뒤로가기 */}
+        {done && showNext && selectedEnv && (
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 22, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
+              어떤 감정이 가장 크게 느껴지나요?
+            </div>
+            <div style={{ display: 'flex', gap: 16, marginBottom: 32 }}>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>기쁨</button>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>슬픔</button>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>분노</button>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>불안</button>
+            </div>
+            <button onClick={() => setSelectedEnv(null)} style={{ background: '#222', color: '#fff', fontWeight: 700, fontSize: 16, border: 'none', borderRadius: 20, padding: '10px 28px', cursor: 'pointer', marginTop: 16 }}>뒤로 돌아가기</button>
           </div>
         )}
         {/* 기본 안내문구/버튼 */}
