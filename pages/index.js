@@ -1,8 +1,10 @@
 import CharacterViewer from '../components/CharacterViewer';
 import KiaTitleViewer from '../components/KiaTitleViewer';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
   // 스크롤 방지
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -108,7 +110,7 @@ export default function Home() {
           letterSpacing: 1.2,
           transition: 'background 0.2s, box-shadow 0.2s',
         }}
-        onClick={() => alert('자아 만들기!')}
+        onClick={() => router.push('/receipt')}
       >
         자아 만들기
       </button>

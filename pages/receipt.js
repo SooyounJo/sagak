@@ -1,86 +1,55 @@
-import { useState } from 'react';
-import CharacterViewer from '../components/CharacterViewer';
-
-function ReceiptBox() {
-  return (
-    <div style={{
-      padding: 32,
-      color: '#222',
-      fontWeight: 600,
-      fontSize: 24,
-      letterSpacing: 1.2,
-    }}>
-      <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 24 }}>Receipt</div>
-      <div>여기에 결제/행위 결과 UI가 들어갑니다.</div>
-    </div>
-  );
-}
+import { useEffect, useRef, useState } from 'react';
+import GLBPersonaAnimation from '../components/GLBPersonaAnimation';
 
 export default function ReceiptPage() {
-  const [started, setStarted] = useState(false);
+  // 스크롤 방지
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  const [animate, setAnimate] = useState(false);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#f6f6f6', overflow: 'hidden', position: 'relative' }}>
-      {/* 3D 모델 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: started ? '5%' : '50%',
-          top: '50%',
-          transform: started ? 'translateY(-50%)' : 'translate(-50%, -50%)',
-          transition: 'all 0.7s cubic-bezier(.7,1.5,.5,1)',
-          zIndex: 30,
-        }}
-      >
-        <CharacterViewer />
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      background: '#f6f6f6',
+      overflow: 'hidden',
+    }}>
+      {/* 좌측 3분의 2에 3D GLB 모델 (애니메이션) */}
+      <div style={{ flex: 2, height: '100vh', position: 'relative', overflow: 'hidden' }}>
+        <GLBPersonaAnimation src={'/3d/main.glb'} animate={animate} />
       </div>
-      {/* 결제창 */}
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          width: 420,
-          height: '100vh',
-          background: '#fff',
-          boxShadow: '-8px 0 32px #0002',
-          zIndex: 40,
-          transition: 'transform 0.7s cubic-bezier(.7,1.5,.5,1)',
-          transform: started ? 'translateX(0)' : 'translateX(100%)',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <ReceiptBox />
-      </div>
-      {/* 시작하기 버튼 */}
-      {!started && (
+      {/* 우측 3분의 1 초록색 박스 + 안내문구/버튼 */}
+      <div style={{ flex: 1, height: '100vh', background: '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <div style={{ color: '#fff', fontSize: 22, fontWeight: 700, textAlign: 'center', marginBottom: 80, lineHeight: 1.5, textShadow: '0 2px 8px #1a1a1a55' }}>
+          시온의 불량한 요소를<br/>모두 제거하는게 좋겠어요!
+        </div>
         <button
           style={{
             position: 'absolute',
             left: '50%',
-            bottom: 60,
+            bottom: 48,
             transform: 'translateX(-50%)',
-            zIndex: 50,
-            padding: '18px 54px',
-            fontSize: '1.3rem',
+            background: '#fff',
+            color: '#39ff14',
             fontWeight: 700,
-            borderRadius: 32,
+            fontSize: 20,
             border: 'none',
-            background: 'rgba(46,204,64,0.7)',
-            color: '#fff',
-            boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)',
-            letterSpacing: 1.5,
-            textShadow: '0 1px 4px rgba(0, 0, 0, 0.2)',
+            borderRadius: 28,
+            padding: '14px 44px',
+            boxShadow: '0 2px 16px 0 #39ff1444',
             cursor: 'pointer',
-            transition: 'transform 0.15s cubic-bezier(.4,2,.6,1), box-shadow 0.2s',
-            backdropFilter: 'blur(4px)',
+            letterSpacing: 1.1,
+            transition: 'background 0.2s, box-shadow 0.2s',
           }}
-          onClick={() => setStarted(true)}
+          onClick={() => setAnimate(true)}
         >
-          시작하기
+          모두제거하기
         </button>
-      )}
+      </div>
     </div>
   );
 } 
