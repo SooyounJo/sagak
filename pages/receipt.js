@@ -43,6 +43,7 @@ export default function ReceiptPage() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const intervalRef = useRef(null);
+  const [showNext, setShowNext] = useState(false);
 
   // 애니메이션 끝나면 로딩 시퀀스 시작
   const handleAnimFinish = () => {
@@ -76,6 +77,16 @@ export default function ReceiptPage() {
     };
   }, []);
 
+  // 완료 후 2초 뒤 showNext 활성화
+  useEffect(() => {
+    if (done) {
+      const t = setTimeout(() => setShowNext(true), 2000);
+      return () => clearTimeout(t);
+    } else {
+      setShowNext(false);
+    }
+  }, [done]);
+
   return (
     <div style={{
       width: '100vw',
@@ -103,9 +114,22 @@ export default function ReceiptPage() {
           </div>
         )}
         {/* 완료 시 문구 */}
-        {done && (
+        {done && !showNext && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#fff', fontWeight: 700, fontSize: 24, textAlign: 'center', letterSpacing: 1.2 }}>
             완료되었습니다!
+          </div>
+        )}
+        {/* 완료 2초 후 다음 질문/버튼 */}
+        {done && showNext && (
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 22, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
+              이번에 만들 자아는<br/>어떤 환경에 놓여있나요?
+            </div>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>학교</button>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>회사</button>
+              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>이외의 인간관계</button>
+            </div>
           </div>
         )}
         {/* 기본 안내문구/버튼 */}
