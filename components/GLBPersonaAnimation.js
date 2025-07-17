@@ -13,7 +13,8 @@ export default function GLBPersonaAnimation({ src, animate, onFinish }) {
     const height = mountRef.current.clientHeight;
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#f6f6f6');
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    // FOV를 24로 더 줄여 왜곡 최소화
+    const camera = new THREE.PerspectiveCamera(24, width / height, 0.1, 1000);
     camera.position.set(0, 0, 3.5);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
@@ -33,9 +34,9 @@ export default function GLBPersonaAnimation({ src, animate, onFinish }) {
     const loader = new GLTFLoader();
     loader.load(src, (gltf) => {
       const model = gltf.scene;
-      model.position.set(0, -0.7, 0);
-      model.scale.set(4.4, 4.4, 4.4);
-      model.rotation.x = -0.18;
+      model.position.set(0, -0.8, 0); // 초기 y 위치도 살짝 아래로
+      model.scale.set(2.7, 2.7, 2.7); // 사이즈 더 줄임
+      model.rotation.x = -0.19;
       modelRef.current = model;
       scene.add(model);
       renderer.render(scene, camera);
@@ -61,15 +62,15 @@ export default function GLBPersonaAnimation({ src, animate, onFinish }) {
   useEffect(() => {
     if (!animate || !modelRef.current || !cameraRef.current || animatingRef.current) return;
     animatingRef.current = true;
-    // x축 반대방향으로 살짝 회전, 카메라 확대는 덜 하고 모델이 하단으로 이동
+    // x축 회전 0.18, 모델 y축 -1.3로 이동
     const model = modelRef.current;
     const camera = cameraRef.current;
     const startRot = model.rotation.x;
-    const endRot = 0.18; // 반대방향
+    const endRot = 0.18;
     const startZ = camera.position.z;
-    const endZ = 2.8; // 확대는 덜 함
+    const endZ = 2.8;
     const startY = model.position.y;
-    const endY = -2.5; // 하단으로 더 이동
+    const endY = -1.3;
     const duration = 900; // ms
     const start = performance.now();
     function animateStep(now) {
