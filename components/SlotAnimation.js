@@ -1,17 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-const baseImages = ['/2d/11.png', '/2d/22.png', '/2d/33.png', '/2d/44.png'];
-
-function getRandomImage() {
-  return baseImages[Math.floor(Math.random() * baseImages.length)];
-}
-
-export default function SlotAnimation({ width = 120, height = 80, speed = 1.5 }) {
+// 항상 같은 이미지가 내려오는 슬롯 애니메이션
+export function RecSlotAnimation({ width = 160, height = 80, speed = 1.5 }) {
   const containerRef = useRef(null);
   const animRef = useRef(null);
   const [images, setImages] = useState(() => {
-    // 초기에 8개 랜덤 이미지로 채움
-    return Array(8).fill(0).map(getRandomImage);
+    // 초기에 8개 모두 rec.png로 채움
+    return Array(8).fill('/2d/rec.png');
   });
   const posRef = useRef(0);
 
@@ -22,10 +17,10 @@ export default function SlotAnimation({ width = 120, height = 80, speed = 1.5 })
       pos += speed;
       if (pos >= height) {
         pos = 0;
-        // 맨 앞 이미지 제거, 맨 뒤에 랜덤 이미지 추가
+        // 맨 앞 이미지 제거, 맨 뒤에 rec.png 추가
         setImages(prev => {
           const next = prev.slice(1);
-          next.push(getRandomImage());
+          next.push('/2d/rec.png');
           return next;
         });
       }
@@ -43,13 +38,9 @@ export default function SlotAnimation({ width = 120, height = 80, speed = 1.5 })
     <div
       ref={containerRef}
       style={{
-        width,
-        height,
+        width: '100%',
+        height: '100%',
         overflow: 'hidden',
-        borderRadius: 16,
-        background: '#2ecc40',
-        boxShadow: '0 2px 16px #000a',
-        margin: '0 auto',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -67,22 +58,21 @@ export default function SlotAnimation({ width = 120, height = 80, speed = 1.5 })
       >
         {images.map((src, i) => (
           <img
-            key={i + '-' + src}
+            key={i}
             src={src}
-            alt={`slot-${i}`}
+            alt={`rec-slot-${i}`}
             style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: 80,
-              maxWidth: 120,
-              objectFit: 'contain',
+              width: '130%',
+              height: '130%',
+              objectFit: 'cover',
+              margin: 0,
               userSelect: 'none',
               pointerEvents: 'none',
-              margin: '12px auto',
               display: 'block',
-              position: 'relative',
+              position: 'absolute',
+              left: '50%',
               top: '50%',
-              transform: 'translateY(-50%)',
+              transform: 'translate(-50%, -50%)',
             }}
             draggable={false}
           />

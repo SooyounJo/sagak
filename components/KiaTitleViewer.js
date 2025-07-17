@@ -22,11 +22,18 @@ export default function KiaTitleViewer() {
     mountRef.current.appendChild(renderer.domElement);
 
     // 조명
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
     scene.add(ambientLight);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    dirLight.position.set(0, 2, 2);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 3.5);
+    dirLight.position.set(2, 4, 6);
     scene.add(dirLight);
+
+    // 환경맵(간단한 흰색 큐브맵)
+    const envMap = new THREE.CubeTextureLoader().load([
+      '/2d/11.png', '/2d/11.png', '/2d/22.png', '/2d/22.png', '/2d/33.png', '/2d/33.png'
+    ]);
+    envMap.encoding = THREE.sRGBEncoding;
+    scene.environment = envMap;
 
     // GLTF 모델 로드 및 애니메이션
     const loader = new GLTFLoader();
@@ -34,6 +41,29 @@ export default function KiaTitleViewer() {
       const model = gltf.scene;
       model.position.set(0, 0.3, 0);
       model.scale.set(1.6, 1.6, 1.6);
+      // 모든 메쉬를 초록색 플라스틱(매끈) 머티리얼로 교체
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: new THREE.Color('#39ff14'), // 네온 초록
+            metalness: 0.7,
+            roughness: 0.03,
+            ior: 1.5,
+            transmission: 1,
+            specularIntensity: 1.2,
+            specularColor: new THREE.Color(0xffffff),
+            thickness: 1.2,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.01,
+            reflectivity: 1.0,
+            envMap: envMap,
+            envMapIntensity: 2,
+            transparent: true,
+            emissive: new THREE.Color('#39ff14'),
+            emissiveIntensity: 0.5,
+          });
+        }
+      });
       scene.add(model);
       if (gltf.animations && gltf.animations.length > 0) {
         // const mixer = new THREE.AnimationMixer(model);
