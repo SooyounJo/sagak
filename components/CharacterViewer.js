@@ -45,8 +45,9 @@ export default function CharacterViewer() {
   // 컬러 애니메이션(그라데이션) 함수
   function animateColor(current, target, duration = 1000) {
     let start = null;
-    const from = current.clone();
+    let stopped = false;
     function step(ts) {
+      if (stopped) return;
       if (!start) start = ts;
       const t = Math.min((ts - start) / duration, 1);
       current.r = from.r + (target.r - from.r) * t;
@@ -59,7 +60,9 @@ export default function CharacterViewer() {
         requestAnimationFrame(step);
       }
     }
+    const from = current.clone();
     requestAnimationFrame(step);
+    return () => { stopped = true; };
   }
 
   // 컬러 변경 함수 (요소별로 다르게 적용)
@@ -108,7 +111,7 @@ export default function CharacterViewer() {
     return () => clearInterval(colorTimer.current);
   }, []);
 
-  // 컬러 인덱스가 바뀔 때마다 적용 + 카메라 스프링 이동
+  // simpleRender가 아니면 컬러/카메라 애니메이션 적용
   useEffect(() => {
     applyColor(colorIdx);
     const preset = CAMERA_PRESETS[colorIdx % CAMERA_PRESETS.length];
@@ -133,6 +136,9 @@ export default function CharacterViewer() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     rendererRef.current = renderer;
@@ -152,6 +158,8 @@ export default function CharacterViewer() {
       if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
+      // 모든 타이머/애니메이션 정리
+      if (colorTimer.current) clearInterval(colorTimer.current);
     };
   }, []);
 

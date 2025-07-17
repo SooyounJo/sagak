@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export default function GLBPersonaAnimation({ src, animate, onFinish, step }) {
+export default function GLBPersonaAnimation({ src, animate, onFinish, step, scale=2.9 }) {
   const mountRef = useRef(null);
   const modelRef = useRef(null);
   const cameraRef = useRef(null);
@@ -15,10 +15,13 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step }) {
     scene.background = new THREE.Color(step === 5 ? '#bbb' : '#fff');
     // FOV를 24로 더 줄여 왜곡 최소화
     const camera = new THREE.PerspectiveCamera(24, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 3.5);
+    camera.position.set(0, 0, 4.2); // 살짝 뒤로
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
@@ -55,7 +58,7 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step }) {
     loader.load(src, (gltf) => {
       const model = gltf.scene;
       model.position.set(0, -0.8, 0); // 초기 y 위치
-      model.scale.set(2.7, 2.7, 2.7); // 사이즈 더 줄임
+      model.scale.set(scale, scale, scale); // props로 받은 scale 적용
       model.rotation.x = 0.18; // main.glb 애니메이션 후 각도를 기본값으로 적용
       model.traverse((child) => {
         if (child.isMesh) {
@@ -82,7 +85,7 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step }) {
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [src, step]);
+  }, [src, step, scale]);
 
   // 애니메이션 트리거
   useEffect(() => {

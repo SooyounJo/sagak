@@ -110,7 +110,7 @@ export default function Home() {
           letterSpacing: 1.2,
           transition: 'background 0.2s, box-shadow 0.2s',
         }}
-        onClick={() => router.push('/receipt')}
+        onClick={() => setTimeout(() => router.push('/receipt'), 0)}
       >
         자아 만들기
       </button>

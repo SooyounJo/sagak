@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import GLBPersonaAnimation from '../components/GLBPersonaAnimation';
+import { useRouter } from 'next/router';
 
 const LOADING_STEPS = [
   { glb: '/3d/main.glb', label: null },
@@ -46,12 +47,13 @@ export default function ReceiptPage() {
   const [showNext, setShowNext] = useState(false);
   const [selectedEnv, setSelectedEnv] = useState(null); // 'school' | 'work' | 'friend'
   const [emotion, setEmotion] = useState(null); // 감정 선택
+  const router = useRouter();
 
   // 환경별 모델 경로
   const ENV_MODEL = {
-    school: 'stu/student.glb',
-    work: 'public/work/worker.glb',
-    friend: 'fri/friend.glb',
+    school: '/stu/student.glb',
+    work: '/work/worker.glb',
+    friend: '/fri/friend.glb',
   };
 
   // 애니메이션 끝나면 로딩 시퀀스 시작
@@ -111,10 +113,37 @@ export default function ReceiptPage() {
           animate={step === 0 && animate}
           onFinish={handleAnimFinish}
           step={step}
+          scale={3.3}
         />
       </div>
       {/* 우측 3분의 1 박스 + 안내문구/버튼/로딩 */}
       <div style={{ flex: 1, height: '100vh', background: step === 5 ? '#111' : '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        {/* 상단 뒤로가기 버튼 */}
+        <button
+          onClick={() => router.push('/')}
+          style={{
+            position: 'absolute',
+            top: 24,
+            left: 24,
+            width: 48,
+            height: 48,
+            borderRadius: '50%',
+            background: '#39ff14',
+            color: '#111',
+            border: 'none',
+            fontSize: 28,
+            fontWeight: 900,
+            boxShadow: '0 2px 12px #1112',
+            cursor: 'pointer',
+            zIndex: 20,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'background 0.2s',
+          }}
+        >
+          ←
+        </button>
         {/* 로딩 시 스피너와 문구 */}
         {loading && step > 0 && step < 6 && !done && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
@@ -153,7 +182,6 @@ export default function ReceiptPage() {
               <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>분노</button>
               <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>불안</button>
             </div>
-            <button onClick={() => setSelectedEnv(null)} style={{ background: '#222', color: '#fff', fontWeight: 700, fontSize: 16, border: 'none', borderRadius: 20, padding: '10px 28px', cursor: 'pointer', marginTop: 16 }}>뒤로 돌아가기</button>
           </div>
         )}
         {/* 기본 안내문구/버튼 */}
