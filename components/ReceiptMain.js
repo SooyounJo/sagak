@@ -137,6 +137,9 @@ export default function ReceiptMain() {
       <div style={{ flex: 1, height: '100vh', background: step === 5 ? '#111' : '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {loading && step > 0 && step < 6 && !done && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 18, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55' }}>
+              필요없는 개성을 모두 제거합니다
+            </div>
             <Spinner />
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginTop: 18, textAlign: 'center', letterSpacing: 1.1 }}>{LOADING_STEPS[step].label}</div>
           </div>
