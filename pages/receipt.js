@@ -174,13 +174,13 @@ export default function ReceiptPage() {
         {done && showNext && selectedEnv && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 22, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
-              어떤 감정이 가장 크게 느껴지나요?
+              상대가 공감을 바라고 있습니다.<br/>어떤 감정을 보이시겠습니까?
             </div>
-            <div style={{ display: 'flex', gap: 16, marginBottom: 32 }}>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>기쁨</button>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>슬픔</button>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>분노</button>
-              <button style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>불안</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 32, width: 260 }}>
+              <EmotionButton label="놀란척" desc="상대의 말에 크게 놀란 듯한 리액션을 보입니다." />
+              <EmotionButton label="슬픈척" desc="상대의 슬픔에 깊이 공감하는 듯한 표정을 짓습니다." />
+              <EmotionButton label="웃긴척" desc="상대의 이야기가 정말 웃긴 것처럼 크게 웃어줍니다." />
+              <EmotionButton label="공감하는 척" desc="진심으로 공감하는 듯한 따뜻한 리액션을 보입니다." />
             </div>
           </div>
         )}
@@ -210,6 +210,61 @@ export default function ReceiptPage() {
             </button>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// 감정 버튼 컴포넌트 (툴팁)
+function EmotionButton({ label, desc }) {
+  return (
+    <div style={{ position: 'relative', width: '100%' }}>
+      <button
+        style={{
+          background: '#fff',
+          color: '#111',
+          fontWeight: 700,
+          fontSize: 18,
+          border: 'none',
+          borderRadius: 24,
+          padding: '14px 0',
+          width: '100%',
+          cursor: 'pointer',
+          marginBottom: 0,
+          position: 'relative',
+          transition: 'background 0.2s, color 0.2s',
+        }}
+        onMouseEnter={e => {
+          const tip = e.currentTarget.nextSibling;
+          if (tip) tip.style.opacity = 1;
+        }}
+        onMouseLeave={e => {
+          const tip = e.currentTarget.nextSibling;
+          if (tip) tip.style.opacity = 0;
+        }}
+      >
+        {label}
+      </button>
+      <div style={{
+        opacity: 0,
+        pointerEvents: 'none',
+        position: 'absolute',
+        left: '50%',
+        top: '100%',
+        transform: 'translateX(-50%)',
+        background: '#222',
+        color: '#fff',
+        fontSize: 15,
+        fontWeight: 400,
+        borderRadius: 12,
+        padding: '10px 18px',
+        marginTop: 8,
+        boxShadow: '0 2px 12px #1115',
+        whiteSpace: 'nowrap',
+        zIndex: 10,
+        transition: 'opacity 0.2s',
+      }}>
+        {desc}
       </div>
     </div>
   );

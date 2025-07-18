@@ -87,8 +87,8 @@ export default function Home() {
         draggable={false}
       />
       {/* 중앙 캐릭터 뷰어 - 상하도 꽉 차게 */}
-      <div style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', zIndex: 10, overflow: 'hidden' }}>
-        <CharacterViewer />
+      <div style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh', zIndex: 10, overflow: 'hidden', pointerEvents: 'none' }}>
+        <CharacterViewer lightRender={true} />
       </div>
       {/* 하단 자아 만들기 버튼 */}
       <button

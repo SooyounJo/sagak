@@ -22,7 +22,7 @@ const CAMERA_PRESETS = [
   { pos: { x: 0.5, y: -1, z: 0.5 }, look: { x: 0, y: -0.9, z: 0 } },
 ];
 
-export default function CharacterViewer() {
+export default function CharacterViewer({ lightRender = false }) {
   const mountRef = useRef(null);
   const [colorIdx, setColorIdx] = useState(0);
   const [springProps, api] = useSpring(() => ({
@@ -135,10 +135,14 @@ export default function CharacterViewer() {
     sceneRef.current = scene;
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const renderer = new THREE.WebGLRenderer({ antialias: !lightRender, alpha: true });
+    if (!lightRender) {
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+    } else {
+      renderer.toneMapping = THREE.NoToneMapping;
+    }
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     rendererRef.current = renderer;
