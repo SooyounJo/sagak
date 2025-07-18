@@ -104,6 +104,8 @@ export default function ReceiptMain() {
     gtamin: '가짜 활력을 얻었어요',
     tears: '속으로 울었어요',
   };
+  const [bgBlack, setBgBlack] = useState(false); // 3D 배경 블랙 전환
+  const [showRetry, setShowRetry] = useState(false); // 새로운 식사 시도 문구 표시
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -150,6 +152,15 @@ export default function ReceiptMain() {
     }
   }, [done]);
 
+  useEffect(() => {
+    if (showReceipt) {
+      setShowRetry(false);
+      // 최종 결과까지 다 나오고 5초 뒤 문구 표시
+      const t = setTimeout(() => setShowRetry(true), 7700); // receiptStep 5까지 4.2초 + 5초
+      return () => clearTimeout(t);
+    }
+  }, [showReceipt, selectedEnv, emotion, selectedItem]);
+
   return (
     <div style={{
       width: '100vw',
@@ -167,6 +178,7 @@ export default function ReceiptMain() {
           scale={3.3}
           dollarPop={dollarPop}
           selectedEnv={selectedEnv}
+          bgBlack={bgBlack}
         />
       </div>
       <div style={{ flex: 1, height: '100vh', background: step === 5 ? '#111' : '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -353,12 +365,14 @@ export default function ReceiptMain() {
               onClick={() => {
                 setShowReceipt(true);
                 setReceiptStep(0);
+                setBgBlack(false);
                 // 순차적으로 한 줄씩 표시 (총 6단계)
                 setTimeout(() => setReceiptStep(1), 700);
                 setTimeout(() => setReceiptStep(2), 1400);
                 setTimeout(() => setReceiptStep(3), 2100);
                 setTimeout(() => setReceiptStep(4), 2800);
                 setTimeout(() => setReceiptStep(5), 3500);
+                setTimeout(() => setBgBlack(true), 4200); // 영수증 다 나오고 배경 블랙
               }}
             >
               선택 완료
@@ -435,6 +449,29 @@ export default function ReceiptMain() {
                 <div style={{ color: '#ff00cc', fontWeight: 900, fontSize: 20, marginTop: 8, textAlign: 'center', width: 260 }}>
                   {FINAL_RESULTS[Math.floor(Math.random() * FINAL_RESULTS.length)]}
                 </div>
+                {showRetry && (
+                  <button
+                    style={{
+                      marginTop: 44,
+                      background: '#fff',
+                      color: '#39ff14',
+                      fontWeight: 900,
+                      fontSize: 18,
+                      border: 'none',
+                      borderRadius: 24,
+                      padding: '14px 44px',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 16px 0 #39ff1444',
+                      letterSpacing: 0.5,
+                      transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                      width: 260,
+                      opacity: 0.96,
+                    }}
+                    onClick={() => router.push('/')}
+                  >
+                    새로운 구매를 진행해보시겠어요?
+                  </button>
+                )}
               </>
             )}
           </div>

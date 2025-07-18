@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export default function GLBPersonaAnimation({ src, animate, onFinish, step, scale=2.9, dollarPop, selectedEnv }) {
+export default function GLBPersonaAnimation({ src, animate, onFinish, step, scale=2.9, dollarPop, selectedEnv, bgBlack }) {
   const mountRef = useRef(null);
   const modelRef = useRef(null);
   const cameraRef = useRef(null);
@@ -81,7 +81,7 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step, scal
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(step === 5 ? '#bbb' : '#fff');
+    scene.background = new THREE.Color(bgBlack ? '#111' : (step === 5 ? '#bbb' : '#fff'));
     // FOV를 24로 더 줄여 왜곡 최소화
     const camera = new THREE.PerspectiveCamera(24, width / height, 0.1, 1000);
     camera.position.set(0, 0, 4.2); // 살짝 뒤로
@@ -185,7 +185,7 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step, scal
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [src, step, scale, popKey, dollarPop, selectedEnv]);
+  }, [src, step, scale, popKey, dollarPop, selectedEnv, bgBlack]);
 
   // 애니메이션 트리거
   useEffect(() => {
