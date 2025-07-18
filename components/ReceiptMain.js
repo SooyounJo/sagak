@@ -69,6 +69,41 @@ export default function ReceiptMain() {
   const router = useRouter();
   const [dollarPops, setDollarPops] = useState([]);
   const [dollarPop, setDollarPop] = useState(false);
+  const [showItemSelect, setShowItemSelect] = useState(false); // 구매 품목 선택창 표시
+  const [selectedItem, setSelectedItem] = useState(null); // 선택된 품목
+  const ITEM_LIST = [
+    { key: 'blood', label: '음료-수혈팩' },
+    { key: 'bank', label: '깨진 저금통' },
+    { key: 'gtamin', label: 'g타민 음료' },
+    { key: 'tears', label: '눈물을 삼키며' },
+  ];
+  const [showReceipt, setShowReceipt] = useState(false); // 결과 영수증 표시
+  const [receiptStep, setReceiptStep] = useState(0); // 영수증 줄 순차 표시
+  const FINAL_RESULTS = [
+    '당신을 잃었네요!',
+    '지갑이 텅 비었어요!',
+    '자존감이 사라졌어요!',
+    '진짜 나를 잃었어요!',
+    '남은 건 공허함뿐!',
+  ];
+  // 각 선택별 결과 문구 프리셋
+  const ENV_RESULT = {
+    school: '적응을 위해 자신을 속였어요',
+    work: '생존을 위해 자신을 감췄어요',
+    friend: '관계를 위해 자신을 포장했어요',
+  };
+  const EMOTION_RESULT = {
+    '놀란척': '진심을 숨겼어요',
+    '슬픈척': '공감을 연기했어요',
+    '웃긴척': '억지로 웃었어요',
+    '공감하는 척': '마음을 감췄어요',
+  };
+  const ITEM_RESULT = {
+    blood: '에너지를 소진했어요',
+    bank: '소중한 것을 잃었어요',
+    gtamin: '가짜 활력을 얻었어요',
+    tears: '속으로 울었어요',
+  };
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -137,11 +172,13 @@ export default function ReceiptMain() {
       <div style={{ flex: 1, height: '100vh', background: step === 5 ? '#111' : '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {loading && step > 0 && step < 6 && !done && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 18, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55' }}>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 8, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55', whiteSpace: 'nowrap' }}>
               필요없는 개성을 모두 제거합니다
             </div>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 18, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55' }}>
+              {LOADING_STEPS[step].label}
+            </div>
             <Spinner />
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginTop: 18, textAlign: 'center', letterSpacing: 1.1 }}>{LOADING_STEPS[step].label}</div>
           </div>
         )}
         {done && !showNext && (
@@ -161,7 +198,7 @@ export default function ReceiptMain() {
             </div>
           </div>
         )}
-        {done && showNext && selectedEnv && (
+        {done && showNext && selectedEnv && !showItemSelect && (
           <>
             {/* 상단 뒤로가기 버튼 */}
             <button
@@ -218,39 +255,189 @@ export default function ReceiptMain() {
               }}
               onClick={() => {
                 setDollarPop(true);
-                setTimeout(() => setDollarPop(false), 100);
+                setTimeout(() => {
+                  setDollarPop(false);
+                  setShowItemSelect(true); // 구매 품목 선택창 띄우기
+                }, 100);
               }}
             >
               이 감정 구매하기
             </button>
-            {/* $ 애니메이션 */}
-            {dollarPops.map(pop => (
-              <span
-                key={pop.id}
-                style={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate(-50%, -50%) translate(${Math.cos(pop.angle) * pop.dist}px, ${Math.sin(pop.angle) * pop.dist}px) scale(1)`,
-                  fontSize: 36,
-                  fontWeight: 900,
-                  color: '#39ff14',
-                  opacity: 0.85,
-                  pointerEvents: 'none',
-                  zIndex: 30,
-                  animation: 'dollar-pop 0.9s cubic-bezier(.4,1.6,.6,1) forwards',
-                }}
-              >$
-                <style>{`
-                  @keyframes dollar-pop {
-                    0% { opacity: 0.7; transform: scale(0.7) translate(-50%,-50%) translate(${Math.cos(pop.angle) * (pop.dist * 0.3)}px, ${Math.sin(pop.angle) * (pop.dist * 0.3)}px); }
-                    60% { opacity: 1; transform: scale(1.2) translate(-50%,-50%) translate(${Math.cos(pop.angle) * pop.dist}px, ${Math.sin(pop.angle) * pop.dist}px); }
-                    100% { opacity: 0; transform: scale(1.5) translate(-50%,-50%) translate(${Math.cos(pop.angle) * (pop.dist * 1.2)}px, ${Math.sin(pop.angle) * (pop.dist * 1.2)}px); }
-                  }
-                `}</style>
-              </span>
-            ))}
           </>
+        )}
+        {/* 구매 품목 선택창 */}
+        {showItemSelect && !showReceipt && (
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 340,
+            background: '#39ff14',
+            borderRadius: 32,
+            boxShadow: '0 4px 32px #39ff1444',
+            padding: '48px 0 32px 0', // padding-top 늘림
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            zIndex: 100,
+          }}>
+            {/* 블랙박스(초록 바) 내부 좌측 상단에 뒤로가기 버튼 */}
+            <button
+              onClick={() => { setShowItemSelect(false); setSelectedItem(null); }}
+              style={{
+                position: 'absolute',
+                top: 16,
+                left: 16,
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: '#222',
+                color: '#fff',
+                border: 'none',
+                fontSize: 22,
+                fontWeight: 900,
+                boxShadow: '0 2px 8px #1112',
+                cursor: 'pointer',
+                zIndex: 120,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.2s',
+              }}
+            >
+              <span style={{ color: '#fff', fontSize: 22, fontWeight: 900 }}>←</span>
+            </button>
+            <div style={{ color: '#fff', fontWeight: 900, fontSize: 22, marginBottom: 24, letterSpacing: 1.1, marginTop: 8 }}>
+              구매 가능 품목
+            </div>
+            <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
+              {ITEM_LIST.map(item => (
+                <button
+                  key={item.key}
+                  onClick={() => setSelectedItem(item.key)}
+                  style={{
+                    width: '100%',
+                    background: selectedItem === item.key ? '#fff' : '#232526',
+                    color: selectedItem === item.key ? '#39ff14' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 18,
+                    border: 'none',
+                    borderRadius: 20,
+                    padding: '14px 0',
+                    cursor: 'pointer',
+                    boxShadow: selectedItem === item.key ? '0 2px 12px #39ff1444' : 'none',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            {/* 선택 완료 버튼(추후 기능 확장 가능) */}
+            <button
+              style={{
+                marginTop: 32,
+                background: selectedItem ? '#ff00cc' : '#bbb',
+                color: selectedItem ? '#fff' : '#888',
+                fontWeight: 900,
+                fontSize: 18,
+                border: 'none',
+                borderRadius: 24,
+                padding: '12px 44px',
+                cursor: selectedItem ? 'pointer' : 'not-allowed',
+                boxShadow: selectedItem ? '0 0 16px 4px #ff00cc88, 0 2px 12px #ff99ff44' : '0 2px 12px #bbb8',
+                transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+              }}
+              disabled={!selectedItem}
+              onClick={() => {
+                setShowReceipt(true);
+                setReceiptStep(0);
+                // 순차적으로 한 줄씩 표시 (총 6단계)
+                setTimeout(() => setReceiptStep(1), 700);
+                setTimeout(() => setReceiptStep(2), 1400);
+                setTimeout(() => setReceiptStep(3), 2100);
+                setTimeout(() => setReceiptStep(4), 2800);
+                setTimeout(() => setReceiptStep(5), 3500);
+              }}
+            >
+              선택 완료
+            </button>
+          </div>
+        )}
+        {/* 결과 영수증(계산서) 화면 */}
+        {showItemSelect && showReceipt && (
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 360,
+            background: '#39ff14',
+            borderRadius: 32,
+            boxShadow: '0 8px 48px #39ff1444',
+            minHeight: '520px',
+            padding: '64px 0 56px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            zIndex: 200,
+            fontFamily: 'Noto Sans KR, sans-serif',
+            justifyContent: 'flex-start',
+          }}>
+            <div style={{ color: '#222', fontWeight: 900, fontSize: 22, marginBottom: 18, letterSpacing: 1.1 }}>
+              영수증
+            </div>
+            {/* 환경 */}
+            {receiptStep > 0 && (
+              <>
+                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>환경</div>
+                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{selectedEnv === 'school' ? '학교' : selectedEnv === 'work' ? '직장' : '인간관계'}</div>
+              </>
+            )}
+            {receiptStep > 1 && (
+              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 16 }}>{ENV_RESULT[selectedEnv]}</div>
+            )}
+            {receiptStep > 1 && (
+              <div style={{ width: 260, borderTop: '2px solid #fff', margin: '16px 0 20px 0' }} />
+            )}
+            {/* 감정 */}
+            {receiptStep > 2 && (
+              <>
+                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>감정</div>
+                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{emotion}</div>
+              </>
+            )}
+            {receiptStep > 3 && (
+              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 16 }}>{EMOTION_RESULT[emotion]}</div>
+            )}
+            {receiptStep > 3 && (
+              <div style={{ width: 260, borderTop: '2px solid #fff', margin: '16px 0 20px 0' }} />
+            )}
+            {/* 구매 품목 */}
+            {receiptStep > 4 && (
+              <>
+                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>구매 품목</div>
+                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{ITEM_LIST.find(i => i.key === selectedItem)?.label}</div>
+              </>
+            )}
+            {receiptStep >= 5 && (
+              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 24 }}>{ITEM_RESULT[selectedItem]}</div>
+            )}
+            {/* 구분선, 오늘 식사의 가격은, 최종 결과 */}
+            {receiptStep >= 5 && (
+              <>
+                <div style={{ width: 260, borderTop: '2px dashed #fff', margin: '28px 0 0 0' }} />
+                <div style={{ width: 260, borderTop: '2px dashed #fff', margin: '8px 0 0 0' }} />
+                <div style={{ color: '#fff', fontWeight: 900, fontSize: 18, marginTop: 36, textAlign: 'center', width: 260, letterSpacing: 0.5 }}>
+                  오늘 식사의 가격은?
+                </div>
+                <div style={{ color: '#ff00cc', fontWeight: 900, fontSize: 20, marginTop: 8, textAlign: 'center', width: 260 }}>
+                  {FINAL_RESULTS[Math.floor(Math.random() * FINAL_RESULTS.length)]}
+                </div>
+              </>
+            )}
+          </div>
         )}
         {!loading && step === 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
