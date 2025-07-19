@@ -72,7 +72,7 @@ export default function ReceiptMain() {
   const [showItemSelect, setShowItemSelect] = useState(false); // 구매 품목 선택창 표시
   const [selectedItem, setSelectedItem] = useState(null); // 선택된 품목
   const ITEM_LIST = [
-    { key: 'blood', label: '음료-수혈팩' },
+    { key: 'blood', label: '수혈팩' },
     { key: 'bank', label: '깨진 저금통' },
     { key: 'gtamin', label: 'g타민 음료' },
     { key: 'tears', label: '눈물을 삼키며' },
@@ -236,7 +236,7 @@ export default function ReceiptMain() {
                 transition: 'background 0.2s',
               }}
             >
-              <span style={{ color: '#111', fontSize: 28, fontWeight: 900 }}>←</span>
+              <span style={{ color: '#111', fontSize: 24, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
             {/* 감정 선택 버튼 중앙 배치 */}
             <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
@@ -318,10 +318,10 @@ export default function ReceiptMain() {
                 transition: 'background 0.2s',
               }}
             >
-              <span style={{ color: '#fff', fontSize: 22, fontWeight: 900 }}>←</span>
+              <span style={{ color: '#fff', fontSize: 18, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
-            <div style={{ color: '#fff', fontWeight: 900, fontSize: 22, marginBottom: 24, letterSpacing: 1.1, marginTop: 8 }}>
-              구매 가능 품목
+            <div style={{ color: '#fff', fontWeight: 900, fontSize: 26, marginBottom: 24, letterSpacing: 1.1, marginTop: 8 }}>
+              음료
             </div>
             <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
               {ITEM_LIST.map(item => (
