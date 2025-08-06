@@ -12,10 +12,13 @@ export default function Lighting({ scene, camera, spotTargetRef }) {
     spotTarget.position.set(camera?.lookAt?.x || 0, camera?.lookAt?.y || 0, camera?.lookAt?.z || 0);
     scene.add(spotTarget);
     if (spotTargetRef) spotTargetRef.current = spotTarget;
-    const spotLight = new THREE.SpotLight(0xffffff, 10, 30, Math.PI / 6, 0.2, 1);
+    const spotLight = new THREE.SpotLight(0xffffff, 8, 30, Math.PI / 6, 0.2, 1);
     spotLight.position.set(0, 2, 6);
     spotLight.target = spotTarget;
     spotLight.castShadow = true;
+    // 그림자 해상도 낮춰서 성능 향상
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
     scene.add(spotLight);
     // Back Light
     const backLight = new THREE.DirectionalLight(0xfff2cc, 1);

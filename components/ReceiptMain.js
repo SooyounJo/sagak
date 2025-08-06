@@ -196,8 +196,11 @@ export default function ReceiptMain() {
         )}
         {done && showNext && !selectedEnv && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 22, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
-              이번에 만들 자아는<br/>어떤 환경에 놓여있나요?
+            <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
+              메인디쉬
+            </div>
+            <div style={{ color: '#fff', fontWeight: 700, fontSize: 18, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
+              시온을 어떤 환경에 내려놓을까요?
             </div>
             <div style={{ display: 'flex', gap: 16 }}>
               <button onClick={() => setSelectedEnv('school')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>학교</button>
@@ -234,8 +237,17 @@ export default function ReceiptMain() {
             >
               <span style={{ color: '#111', fontSize: 24, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
+            {/* 제목과 부제목 */}
+            <div style={{ position: 'absolute', left: '50%', top: '30%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
+                서브디쉬
+              </div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1, lineHeight: 1.4 }}>
+                시온의 주변인이 대화중 반응을 기대하고 있어요.<br/>어떤 반응을 보이게 할까요?
+              </div>
+            </div>
             {/* 감정 선택 버튼 중앙 배치 */}
-            <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
+            <div style={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: 240, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
               <EmotionButton label="놀란척" desc="상대의 말에 크게 놀란 듯한 리액션을 보입니다." onClick={() => setEmotion('놀란척')} />
               <EmotionButton label="슬픈척" desc="상대의 슬픔에 깊이 공감하는 듯한 표정을 짓습니다." onClick={() => setEmotion('슬픈척')} />
               <EmotionButton label="웃긴척" desc="상대의 이야기가 정말 웃긴 것처럼 크게 웃어줍니다." onClick={() => setEmotion('웃긴척')} />
@@ -251,10 +263,10 @@ export default function ReceiptMain() {
                 background: '#39ff14',
                 color: '#fff',
                 fontWeight: 900,
-                fontSize: 20,
+                fontSize: 18,
                 border: 'none',
-                borderRadius: 28,
-                padding: '14px 44px',
+                borderRadius: 24,
+                padding: '12px 36px',
                 boxShadow: '0 2px 16px 0 #39ff1444',
                 cursor: 'pointer',
                 letterSpacing: 1.1,
@@ -316,12 +328,15 @@ export default function ReceiptMain() {
             >
               <span style={{ color: '#fff', fontSize: 18, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
-            <div style={{ color: '#fff', fontWeight: 900, fontSize: 26, marginBottom: 24, letterSpacing: 1.1, marginTop: 8 }}>
+            <div style={{ color: '#fff', fontWeight: 900, fontSize: 26, marginBottom: 8, letterSpacing: 1.1, marginTop: 8 }}>
               음료
+            </div>
+            <div style={{ color: '#fff', fontWeight: 500, fontSize: 14, marginBottom: 24, letterSpacing: 0.5, textAlign: 'center', lineHeight: 1.3 }}>
+              완벽한 사회인이 되도록 아이템을 선택해주세요!
             </div>
             <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
               {ITEM_LIST.map(item => (
-                <div key={item.key} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div key={item.key} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
                   <button
                     onClick={() => setSelectedItem(item.key)}
                     style={{
@@ -338,15 +353,36 @@ export default function ReceiptMain() {
                       transition: 'background 0.2s, color 0.2s',
                       marginBottom: 4,
                     }}
+                    onMouseEnter={e => {
+                      const tooltip = e.currentTarget.nextSibling;
+                      if (tooltip) tooltip.style.opacity = 1;
+                    }}
+                    onMouseLeave={e => {
+                      const tooltip = e.currentTarget.nextSibling;
+                      if (tooltip) tooltip.style.opacity = 0;
+                    }}
                   >
                     {item.label}
                   </button>
                   <div style={{
                     fontSize: 12,
-                    color: selectedItem === item.key ? '#fff' : 'rgba(255,255,255,0.7)',
-                    fontWeight: 500,
+                    color: '#000',
+                    fontWeight: 700,
                     textAlign: 'center',
                     lineHeight: 1.2,
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: '#fff',
+                    padding: '6px 10px',
+                    borderRadius: 6,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    transition: 'opacity 0.2s',
+                    whiteSpace: 'nowrap',
+                    zIndex: 10,
                   }}>
                     {item.desc}
                   </div>
@@ -405,55 +441,215 @@ export default function ReceiptMain() {
             zIndex: 200,
             fontFamily: 'Noto Sans KR, sans-serif',
             justifyContent: 'flex-start',
+            animation: 'receipt-print 0.8s ease-out',
+            overflow: 'hidden',
           }}>
+            <style jsx>{`
+              @keyframes receipt-print {
+                0% {
+                  transform: translate(-50%, -50%) scaleY(0);
+                  opacity: 0;
+                }
+                50% {
+                  transform: translate(-50%, -50%) scaleY(0.3);
+                  opacity: 0.7;
+                }
+                100% {
+                  transform: translate(-50%, -50%) scaleY(1);
+                  opacity: 1;
+                }
+              }
+              
+              @keyframes receipt-line-print {
+                0% {
+                  transform: scaleY(0);
+                  opacity: 0;
+                }
+                100% {
+                  transform: scaleY(1);
+                  opacity: 1;
+                }
+              }
+              
+              @keyframes button-pump {
+                0%, 100% {
+                  transform: scale(1);
+                  box-shadow: 0 2px 16px 0 #39ff1444;
+                }
+                50% {
+                  transform: scale(1.05);
+                  box-shadow: 0 4px 24px 0 #39ff1466;
+                }
+              }
+            `}</style>
             <div style={{ color: '#222', fontWeight: 900, fontSize: 22, marginBottom: 18, letterSpacing: 1.1 }}>
               영수증
             </div>
             {/* 환경 */}
             {receiptStep > 0 && (
               <>
-                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>환경</div>
-                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{selectedEnv === 'school' ? '학교' : selectedEnv === 'work' ? '직장' : '인간관계'}</div>
+                <div style={{ 
+                  color: 'rgba(255,255,255,0.55)', 
+                  fontSize: 17, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out',
+                  transformOrigin: 'top',
+                }}>환경</div>
+                <div style={{ 
+                  color: '#fff', 
+                  fontSize: 18, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out 0.1s both',
+                  transformOrigin: 'top',
+                }}>{selectedEnv === 'school' ? '학교' : selectedEnv === 'work' ? '직장' : '인간관계'}</div>
               </>
             )}
             {receiptStep > 1 && (
-              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 16 }}>{ENV_RESULT[selectedEnv]}</div>
+              <div style={{ 
+                color: '#fff', 
+                fontSize: 15, 
+                fontWeight: 900, 
+                width: 260, 
+                textAlign: 'right', 
+                marginBottom: 16,
+                animation: 'receipt-line-print 0.3s ease-out',
+                transformOrigin: 'top',
+              }}>{ENV_RESULT[selectedEnv]}</div>
             )}
             {receiptStep > 1 && (
-              <div style={{ width: 260, borderTop: '2px solid #fff', margin: '16px 0 20px 0' }} />
+              <div style={{ 
+                width: 260, 
+                borderTop: '2px solid #fff', 
+                margin: '16px 0 20px 0',
+                animation: 'receipt-line-print 0.2s ease-out',
+              }} />
             )}
             {/* 감정 */}
             {receiptStep > 2 && (
               <>
-                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>감정</div>
-                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{emotion}</div>
+                <div style={{ 
+                  color: 'rgba(255,255,255,0.55)', 
+                  fontSize: 17, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out',
+                  transformOrigin: 'top',
+                }}>감정</div>
+                <div style={{ 
+                  color: '#fff', 
+                  fontSize: 18, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out 0.1s both',
+                  transformOrigin: 'top',
+                }}>{emotion}</div>
               </>
             )}
             {receiptStep > 3 && (
-              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 16 }}>{EMOTION_RESULT[emotion]}</div>
+              <div style={{ 
+                color: '#fff', 
+                fontSize: 15, 
+                fontWeight: 900, 
+                width: 260, 
+                textAlign: 'right', 
+                marginBottom: 16,
+                animation: 'receipt-line-print 0.3s ease-out',
+                transformOrigin: 'top',
+              }}>{EMOTION_RESULT[emotion]}</div>
             )}
             {receiptStep > 3 && (
-              <div style={{ width: 260, borderTop: '2px solid #fff', margin: '16px 0 20px 0' }} />
+              <div style={{ 
+                width: 260, 
+                borderTop: '2px solid #fff', 
+                margin: '16px 0 20px 0',
+                animation: 'receipt-line-print 0.2s ease-out',
+              }} />
             )}
             {/* 구매 품목 */}
             {receiptStep > 4 && (
               <>
-                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 17, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>구매 품목</div>
-                <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, width: 260, textAlign: 'left', marginBottom: 0 }}>{ITEM_LIST.find(i => i.key === selectedItem)?.label}</div>
+                <div style={{ 
+                  color: 'rgba(255,255,255,0.55)', 
+                  fontSize: 17, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out',
+                  transformOrigin: 'top',
+                }}>구매 품목</div>
+                <div style={{ 
+                  color: '#fff', 
+                  fontSize: 18, 
+                  fontWeight: 900, 
+                  width: 260, 
+                  textAlign: 'left', 
+                  marginBottom: 0,
+                  animation: 'receipt-line-print 0.3s ease-out 0.1s both',
+                  transformOrigin: 'top',
+                }}>{ITEM_LIST.find(i => i.key === selectedItem)?.label}</div>
               </>
             )}
             {receiptStep >= 5 && (
-              <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, width: 260, textAlign: 'right', marginBottom: 24 }}>{ITEM_RESULT[selectedItem]}</div>
+              <div style={{ 
+                color: '#fff', 
+                fontSize: 15, 
+                fontWeight: 900, 
+                width: 260, 
+                textAlign: 'right', 
+                marginBottom: 24,
+                animation: 'receipt-line-print 0.3s ease-out',
+                transformOrigin: 'top',
+              }}>{ITEM_RESULT[selectedItem]}</div>
             )}
             {/* 구분선, 오늘 식사의 가격은, 최종 결과 */}
             {receiptStep >= 5 && (
               <>
-                <div style={{ width: 260, borderTop: '2px dashed #fff', margin: '28px 0 0 0' }} />
-                <div style={{ width: 260, borderTop: '2px dashed #fff', margin: '8px 0 0 0' }} />
-                <div style={{ color: '#fff', fontWeight: 900, fontSize: 18, marginTop: 36, textAlign: 'center', width: 260, letterSpacing: 0.5 }}>
+                <div style={{ 
+                  width: 260, 
+                  borderTop: '2px dashed #fff', 
+                  margin: '28px 0 0 0',
+                  animation: 'receipt-line-print 0.3s ease-out',
+                }} />
+                <div style={{ 
+                  width: 260, 
+                  borderTop: '2px dashed #fff', 
+                  margin: '8px 0 0 0',
+                  animation: 'receipt-line-print 0.3s ease-out 0.1s both',
+                }} />
+                <div style={{ 
+                  color: '#fff', 
+                  fontWeight: 900, 
+                  fontSize: 18, 
+                  marginTop: 36, 
+                  textAlign: 'center', 
+                  width: 260, 
+                  letterSpacing: 0.5,
+                  animation: 'receipt-line-print 0.4s ease-out 0.2s both',
+                  transformOrigin: 'top',
+                }}>
                   오늘 식사의 가격은?
                 </div>
-                <div style={{ color: '#ff00cc', fontWeight: 900, fontSize: 20, marginTop: 8, textAlign: 'center', width: 260 }}>
+                <div style={{ 
+                  color: '#ff00cc', 
+                  fontWeight: 900, 
+                  fontSize: 20, 
+                  marginTop: 8, 
+                  textAlign: 'center', 
+                  width: 260,
+                  animation: 'receipt-line-print 0.4s ease-out 0.3s both',
+                  transformOrigin: 'top',
+                }}>
                   {FINAL_RESULTS[Math.floor(Math.random() * FINAL_RESULTS.length)]}
                 </div>
                 {showRetry && (
@@ -473,6 +669,7 @@ export default function ReceiptMain() {
                       transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
                       width: 260,
                       opacity: 0.96,
+                      animation: 'button-pump 2s ease-in-out infinite',
                     }}
                     onClick={() => router.push('/')}
                   >
@@ -521,10 +718,10 @@ function EmotionButton({ label, desc, onClick }) {
           background: '#fff',
           color: '#111',
           fontWeight: 700,
-          fontSize: 18,
+          fontSize: 16,
           border: 'none',
-          borderRadius: 24,
-          padding: '14px 0',
+          borderRadius: 20,
+          padding: '12px 0',
           width: '100%',
           cursor: 'pointer',
           marginBottom: 0,
@@ -552,11 +749,11 @@ function EmotionButton({ label, desc, onClick }) {
         transform: 'translateX(-50%)',
         background: '#222',
         color: '#fff',
-        fontSize: 15,
+        fontSize: 13,
         fontWeight: 400,
-        borderRadius: 12,
-        padding: '10px 18px',
-        marginTop: 8,
+        borderRadius: 10,
+        padding: '8px 14px',
+        marginTop: 6,
         boxShadow: '0 2px 12px #1115',
         whiteSpace: 'nowrap',
         zIndex: 10,

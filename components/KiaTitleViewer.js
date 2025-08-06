@@ -15,10 +15,16 @@ export default function KiaTitleViewer() {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0.3, 3.2);
     camera.lookAt(0, 0.3, 0);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: false, 
+      alpha: true,
+      powerPreference: "high-performance"
+    });
     renderer.setClearColor(0x000000, 0);
     renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // 픽셀 비율 제한으로 성능 향상
+    const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+    renderer.setPixelRatio(pixelRatio);
     mountRef.current.appendChild(renderer.domElement);
 
     // 조명
@@ -73,16 +79,26 @@ export default function KiaTitleViewer() {
       renderer.render(scene, camera);
     });
 
-    // 애니메이션 루프
+    // 애니메이션 루프 - 최적화
     let raf;
-    function animate() {
+    let lastRenderTime = 0;
+    const renderInterval = 1000 / 30; // 30fps로 제한
+    
+    function animate(now) {
       raf = requestAnimationFrame(animate);
+      
+      // 렌더링 빈도 제한
+      if (now - lastRenderTime < renderInterval) {
+        return;
+      }
+      
       if (mixerRef.current) {
         mixerRef.current.update(clockRef.current.getDelta());
       }
       renderer.render(scene, camera);
+      lastRenderTime = now;
     }
-    animate();
+    animate(0);
 
     return () => {
       cancelAnimationFrame(raf);

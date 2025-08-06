@@ -32,7 +32,7 @@ export default function CharacterViewer({ lightRender = false }) {
     lookX: CAMERA_PRESETS[0].look.x,
     lookY: CAMERA_PRESETS[0].look.y,
     lookZ: CAMERA_PRESETS[0].look.z,
-    config: { tension: 220, friction: 22 },
+    config: { tension: 120, friction: 40 }, // 더 부드럽게 조정
   }));
   const cameraRef = useRef();
   const rendererRef = useRef();
@@ -42,20 +42,34 @@ export default function CharacterViewer({ lightRender = false }) {
   const colorTimer = useRef();
   const originalColors = useRef([]);
 
-  // 컬러 애니메이션(그라데이션) 함수
-  function animateColor(current, target, duration = 1000) {
+  // 컬러 애니메이션(그라데이션) 함수 - 강화 최적화
+  function animateColor(current, target, duration = 600) {
     let start = null;
     let stopped = false;
+    let lastRenderTime = 0;
+    const renderInterval = 1000 / 20; // 20fps로 더 낮게 제한
+    
     function step(ts) {
       if (stopped) return;
       if (!start) start = ts;
+      
+      // 렌더링 빈도 제한
+      if (ts - lastRenderTime < renderInterval) {
+        requestAnimationFrame(step);
+        return;
+      }
+      
       const t = Math.min((ts - start) / duration, 1);
       current.r = from.r + (target.r - from.r) * t;
       current.g = from.g + (target.g - from.g) * t;
       current.b = from.b + (target.b - from.b) * t;
-      if (rendererRef.current && cameraRef.current && sceneRef.current) {
+      
+      // 렌더링 빈도 더 줄이기
+      if (rendererRef.current && cameraRef.current && sceneRef.current && Math.random() > 0.3) {
         rendererRef.current.render(sceneRef.current, cameraRef.current);
+        lastRenderTime = ts;
       }
+      
       if (t < 1) {
         requestAnimationFrame(step);
       }
@@ -65,12 +79,14 @@ export default function CharacterViewer({ lightRender = false }) {
     return () => { stopped = true; };
   }
 
-  // 컬러 변경 함수 (요소별로 다르게 적용)
+  // 컬러 변경 함수 (요소별로 다르게 적용) - 최적화
   const applyColor = (idx) => {
     const model = modelRef.current;
     if (!model) return;
     const colorSet = COLOR_SETS[idx % COLOR_SETS.length];
     let meshIdx = 0;
+    let renderCount = 0;
+    
     model.traverse((child) => {
       if (
         child.isMesh &&
@@ -94,24 +110,29 @@ export default function CharacterViewer({ lightRender = false }) {
             animateColor(child.material.color, new THREE.Color(targetColor));
           }
           meshIdx++;
+          renderCount++;
         }
       }
     });
-    if (rendererRef.current && cameraRef.current && sceneRef.current) {
-      rendererRef.current.render(sceneRef.current, cameraRef.current);
+    
+    // 렌더링 빈도 제한
+    if (rendererRef.current && cameraRef.current && sceneRef.current && renderCount > 0) {
+      setTimeout(() => {
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+      }, 50);
     }
   };
 
-  // 자동 컬러 변경 타이머
+  // 자동 컬러 변경 타이머 - 강화 최적화
   useEffect(() => {
     if (colorTimer.current) clearInterval(colorTimer.current);
     colorTimer.current = setInterval(() => {
       setColorIdx((prev) => (prev + 1) % COLOR_SETS.length);
-    }, 3000);
+    }, 4000); // 4초로 조정
     return () => clearInterval(colorTimer.current);
   }, []);
 
-  // simpleRender가 아니면 컬러/카메라 애니메이션 적용
+  // simpleRender가 아니면 컬러/카메라 애니메이션 적용 - 강화 최적화
   useEffect(() => {
     applyColor(colorIdx);
     const preset = CAMERA_PRESETS[colorIdx % CAMERA_PRESETS.length];
@@ -122,7 +143,7 @@ export default function CharacterViewer({ lightRender = false }) {
       lookX: preset.look.x,
       lookY: preset.look.y,
       lookZ: preset.look.z,
-      config: { tension: 220, friction: 22 },
+      config: { tension: 120, friction: 40 }, // 더 부드럽게 조정
     });
   }, [colorIdx]);
 
@@ -135,7 +156,13 @@ export default function CharacterViewer({ lightRender = false }) {
     sceneRef.current = scene;
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    const renderer = new THREE.WebGLRenderer({ antialias: !lightRender, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: false, // 안티앨리어싱 비활성화로 성능 향상
+      alpha: true,
+      powerPreference: "high-performance", // 성능 우선 설정
+      stencil: false, // 스텐실 버퍼 비활성화
+      depth: true
+    });
     if (!lightRender) {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
@@ -143,7 +170,9 @@ export default function CharacterViewer({ lightRender = false }) {
     } else {
       renderer.toneMapping = THREE.NoToneMapping;
     }
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // 픽셀 비율 더 낮게 제한
+    const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);

@@ -87,12 +87,20 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step, scal
     camera.position.set(0, 0, 4.2); // 살짝 뒤로
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: false, 
+      alpha: true,
+      powerPreference: "high-performance",
+      stencil: false,
+      depth: true
+    });
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // 픽셀 비율 제한으로 성능 향상
+    const pixelRatio = Math.min(window.devicePixelRatio, 1.5);
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
 
     // 조명
@@ -101,8 +109,9 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step, scal
     const dirLight = new THREE.DirectionalLight(0xffffff, 3.5); // 더 강하게
     dirLight.position.set(-6, 4, 2); // 좌측(-x)에서 쏨
     dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 2048;
-    dirLight.shadow.mapSize.height = 2048;
+    // 그림자 해상도 낮춰서 성능 향상
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
     dirLight.shadow.bias = -0.001;
     scene.add(dirLight);
     // 그림자 받는 평면 추가 (바닥)
@@ -159,13 +168,23 @@ export default function GLBPersonaAnimation({ src, animate, onFinish, step, scal
       // }
     });
 
-    // 애니메이션 루프
+    // 애니메이션 루프 - 최적화
     let raf;
-    function animateLoop() {
+    let lastRenderTime = 0;
+    const renderInterval = 1000 / 30; // 30fps로 제한
+    
+    function animateLoop(now) {
       raf = requestAnimationFrame(animateLoop);
+      
+      // 렌더링 빈도 제한
+      if (now - lastRenderTime < renderInterval) {
+        return;
+      }
+      
       renderer.render(scene, camera);
+      lastRenderTime = now;
     }
-    animateLoop();
+    animateLoop(0);
 
     if (popKey > 0 && dollarPop) {
       createDollarMeshes(scene);
