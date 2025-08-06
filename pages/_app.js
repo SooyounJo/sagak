@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 
 function MagentaCursor() {
   const cursorRef = useRef(null);
@@ -88,9 +89,56 @@ function MagentaCursor() {
   );
 }
 
+function AutoRedirect() {
+  const router = useRouter();
+  const timeoutRef = useRef(null);
+
+  const resetTimer = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // 5분(300초) 후에 홈페이지로 리다이렉트
+    timeoutRef.current = setTimeout(() => {
+      if (router.pathname !== '/') {
+        router.push('/');
+      }
+    }, 300000); // 5분 = 300,000ms
+  };
+
+  useEffect(() => {
+    // 사용자 활동 감지 이벤트들
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    const handleUserActivity = () => {
+      resetTimer();
+    };
+
+    // 이벤트 리스너 등록
+    events.forEach(event => {
+      document.addEventListener(event, handleUserActivity, true);
+    });
+
+    // 초기 타이머 시작
+    resetTimer();
+
+    // 클린업 함수
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      events.forEach(event => {
+        document.removeEventListener(event, handleUserActivity, true);
+      });
+    };
+  }, [router]);
+
+  return null; // 이 컴포넌트는 UI를 렌더링하지 않음
+}
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
+      <AutoRedirect />
       <MagentaCursor />
       <Component {...pageProps} />
       <style jsx global>{`

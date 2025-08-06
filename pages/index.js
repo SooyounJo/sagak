@@ -23,6 +23,27 @@ export default function Home() {
       alignItems: 'center',
       justifyContent: 'center',
     }}>
+      {/* 상단 경고문 */}
+      <div style={{
+        position: 'absolute',
+        top: 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 70,
+        fontSize: 12,
+        color: '#ff6b6b',
+        opacity: 0.9,
+        letterSpacing: 0.3,
+        fontWeight: 500,
+        background: 'rgba(255, 107, 107, 0.1)',
+        padding: '3px 12px',
+        borderRadius: 8,
+        pointerEvents: 'none',
+        userSelect: 'none',
+        border: '1px solid rgba(255, 107, 107, 0.3)',
+      }}>
+        !조금 렉이 걸릴 수 있습니다!
+      </div>
       {/* 상단 안내 문구 - 네온그린 배경, 흰색 글씨, 중앙 */}
       <div style={{
         position: 'absolute',

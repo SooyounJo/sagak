@@ -72,19 +72,15 @@ export default function ReceiptMain() {
   const [showItemSelect, setShowItemSelect] = useState(false); // 구매 품목 선택창 표시
   const [selectedItem, setSelectedItem] = useState(null); // 선택된 품목
   const ITEM_LIST = [
-    { key: 'blood', label: '수혈팩' },
-    { key: 'bank', label: '깨진 저금통' },
-    { key: 'gtamin', label: 'g타민 음료' },
-    { key: 'tears', label: '눈물을 삼키며' },
+    { key: 'pop', label: 'pop clear!', desc: '담배 한모금' },
+    { key: 'brain', label: 'NEW BRAIN', desc: '생각이 안날땐 지피티를!' },
+    { key: 'flex', label: 'BIG FLEX', desc: '남들보다 못나가는 것 처럼 보일 수 없지' },
+    { key: 'famous', label: 'FAMOUS ME', desc: '행복한 나의 모습을 만들어서라도 보여주자!' },
   ];
   const [showReceipt, setShowReceipt] = useState(false); // 결과 영수증 표시
   const [receiptStep, setReceiptStep] = useState(0); // 영수증 줄 순차 표시
   const FINAL_RESULTS = [
-    '당신을 잃었네요!',
-    '지갑이 텅 비었어요!',
-    '자존감이 사라졌어요!',
-    '진짜 나를 잃었어요!',
-    '남은 건 공허함뿐!',
+    'SO, WHO ARE YOU?',
   ];
   // 각 선택별 결과 문구 프리셋
   const ENV_RESULT = {
@@ -99,10 +95,10 @@ export default function ReceiptMain() {
     '공감하는 척': '마음을 감췄어요',
   };
   const ITEM_RESULT = {
-    blood: '에너지를 소진했어요',
-    bank: '소중한 것을 잃었어요',
-    gtamin: '가짜 활력을 얻었어요',
-    tears: '속으로 울었어요',
+    pop: '담배 한모금으로 스트레스를 잠시 잊었어요',
+    brain: 'AI에게 의존하게 되었어요',
+    flex: '자신감을 과도하게 표현했어요',
+    famous: '가짜 행복을 연기했어요',
   };
   const [bgBlack, setBgBlack] = useState(false); // 3D 배경 블랙 전환
   const [showRetry, setShowRetry] = useState(false); // 새로운 식사 시도 문구 표시
@@ -325,25 +321,36 @@ export default function ReceiptMain() {
             </div>
             <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
               {ITEM_LIST.map(item => (
-                <button
-                  key={item.key}
-                  onClick={() => setSelectedItem(item.key)}
-                  style={{
-                    width: '100%',
-                    background: selectedItem === item.key ? '#fff' : '#232526',
-                    color: selectedItem === item.key ? '#39ff14' : '#fff',
-                    fontWeight: 700,
-                    fontSize: 18,
-                    border: 'none',
-                    borderRadius: 20,
-                    padding: '14px 0',
-                    cursor: 'pointer',
-                    boxShadow: selectedItem === item.key ? '0 2px 12px #39ff1444' : 'none',
-                    transition: 'background 0.2s, color 0.2s',
-                  }}
-                >
-                  {item.label}
-                </button>
+                <div key={item.key} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <button
+                    onClick={() => setSelectedItem(item.key)}
+                    style={{
+                      width: '100%',
+                      background: selectedItem === item.key ? '#fff' : '#232526',
+                      color: selectedItem === item.key ? '#39ff14' : '#fff',
+                      fontWeight: 700,
+                      fontSize: 18,
+                      border: 'none',
+                      borderRadius: 20,
+                      padding: '14px 0',
+                      cursor: 'pointer',
+                      boxShadow: selectedItem === item.key ? '0 2px 12px #39ff1444' : 'none',
+                      transition: 'background 0.2s, color 0.2s',
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                  <div style={{
+                    fontSize: 12,
+                    color: selectedItem === item.key ? '#fff' : 'rgba(255,255,255,0.7)',
+                    fontWeight: 500,
+                    textAlign: 'center',
+                    lineHeight: 1.2,
+                  }}>
+                    {item.desc}
+                  </div>
+                </div>
               ))}
             </div>
             {/* 선택 완료 버튼(추후 기능 확장 가능) */}
