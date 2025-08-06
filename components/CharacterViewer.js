@@ -8,8 +8,8 @@ import CameraController from './CameraController';
 // 요소별 컬러 세트
 const COLOR_SETS = [
   [null, null, null], // 원래색
-  [0x3498db, 0xe74c3c, 0xf1c40f], // 파랑, 빨강, 노랑
-  [0x2ecc40, 0x9b59b6, 0xe67e22], // 초록, 보라, 주황
+  [0x39ff14, 0xff00cc, 0x39ff14], // 라이트 그린, 마젠타, 라이트 그린
+  [0xff00cc, 0x39ff14, 0xff00cc], // 마젠타, 라이트 그린, 마젠타
 ];
 
 // 카메라 프리셋: 기본 뷰 1개 + 얼굴 클로즈업 2개
