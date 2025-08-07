@@ -38,7 +38,7 @@ export default function KiaTitleViewer() {
     const envMap = new THREE.CubeTextureLoader().load([
       '/2d/11.png', '/2d/11.png', '/2d/22.png', '/2d/22.png', '/2d/33.png', '/2d/33.png'
     ]);
-    envMap.encoding = THREE.sRGBEncoding;
+    envMap.colorSpace = THREE.SRGBColorSpace;
     scene.environment = envMap;
 
     // GLTF 모델 로드 및 애니메이션

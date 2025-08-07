@@ -248,113 +248,59 @@ export default function ReceiptMain() {
           }}>
             {/* 환경 선택 */}
             <div style={{
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 8,
+              background: 'rgba(128, 128, 128, 0.9)',
+              color: '#fff',
+              padding: '8px 16px',
+              borderRadius: 20,
+              fontSize: 14,
+              fontWeight: 700,
+              letterSpacing: 0.5,
+              boxShadow: '0 2px 8px rgba(128, 128, 128, 0.3)',
+              border: '2px solid rgba(128, 128, 128, 0.5)',
             }}>
-                              <img
-                  src={`/gra/${selectedEnv === 'school' ? 'clostu.png' : selectedEnv === 'work' ? 'clowork.png' : 'clo1.png'}`}
-                  alt="environment"
-                  style={{
-                    width: 120,
-                    height: 120,
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
-                  }}
-                />
-              <div style={{
-                background: 'rgba(57, 255, 20, 0.9)',
-                color: '#000',
-                padding: '8px 16px',
-                borderRadius: 20,
-                fontSize: 14,
-                fontWeight: 700,
-                letterSpacing: 0.5,
-                boxShadow: '0 2px 8px rgba(57, 255, 20, 0.3)',
-                border: '2px solid rgba(57, 255, 20, 0.5)',
-              }}>
-                +{isKorean 
-                  ? (selectedEnv === 'school' ? '학생' : selectedEnv === 'work' ? '회사원' : '사회생활')
-                  : (selectedEnv === 'school' ? 'Student' : selectedEnv === 'work' ? 'Worker' : 'Social Life')
-                }
-              </div>
+              +{isKorean 
+                ? (selectedEnv === 'school' ? '학생' : selectedEnv === 'work' ? '회사원' : '사회생활')
+                : (selectedEnv === 'school' ? 'Student' : selectedEnv === 'work' ? 'Worker' : 'Social Life')
+              }
             </div>
             
             {/* 감정 선택 */}
             {emotion && (
               <div style={{
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 8,
+                background: 'rgba(128, 128, 128, 0.9)',
+                color: '#fff',
+                padding: '8px 16px',
+                borderRadius: 20,
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                boxShadow: '0 2px 8px rgba(128, 128, 128, 0.3)',
+                border: '2px solid rgba(128, 128, 128, 0.5)',
               }}>
-                <img
-                  src={`/gra/${emotion === '놀란척' ? 'sur.png' : emotion === '슬픈척' ? 'sad.png' : emotion === '웃긴척' ? 'sm.png' : 'ew.png'}`}
-                  alt="emotion"
-                  style={{
-                    width: 120,
-                    height: 120,
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
-                  }}
-                />
-                <div style={{
-                  background: 'rgba(255, 0, 204, 0.9)',
-                  color: '#fff',
-                  padding: '8px 16px',
-                  borderRadius: 20,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  letterSpacing: 0.5,
-                  boxShadow: '0 2px 8px rgba(255, 0, 204, 0.3)',
-                  border: '2px solid rgba(255, 0, 204, 0.5)',
-                }}>
-                  +{isKorean 
-                    ? (emotion === '놀란척' ? '놀란척' : emotion === '슬픈척' ? '슬픈척' : emotion === '웃긴척' ? '웃긴척' : '공감하는척')
-                    : (emotion === '놀란척' ? 'Surprised' : emotion === '슬픈척' ? 'Sad' : emotion === '웃긴척' ? 'Laughing' : 'Empathetic')
-                  }
-                </div>
+                +{isKorean 
+                  ? (emotion === '놀란척' ? '놀란척' : emotion === '슬픈척' ? '슬픈척' : emotion === '웃긴척' ? '웃긴척' : '공감하는척')
+                  : (emotion === '놀란척' ? 'Surprised' : emotion === '슬픈척' ? 'Sad' : emotion === '웃긴척' ? 'Laughing' : 'Empathetic')
+                }
               </div>
             )}
             
             {/* 음료 선택 */}
             {selectedItem && (
               <div style={{
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 8,
+                background: 'rgba(128, 128, 128, 0.9)',
+                color: '#fff',
+                padding: '8px 16px',
+                borderRadius: 20,
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                boxShadow: '0 2px 8px rgba(128, 128, 128, 0.3)',
+                border: '2px solid rgba(128, 128, 128, 0.5)',
               }}>
-                <img
-                  src={`/gra/${selectedItem === 'pop' ? 'pop.png' : selectedItem === 'brain' ? 'an.png' : selectedItem === 'flex' ? 'flex.png' : 'fa.png'}`}
-                  alt="beverage"
-                  style={{
-                    width: 120,
-                    height: 120,
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
-                  }}
-                />
-                <div style={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  color: '#000',
-                  padding: '8px 16px',
-                  borderRadius: 20,
-                  fontSize: 14,
-                  fontWeight: 700,
-                  letterSpacing: 0.5,
-                  boxShadow: '0 2px 8px rgba(255, 255, 255, 0.3)',
-                  border: '2px solid rgba(255, 255, 255, 0.5)',
-                }}>
-                  +{isKorean 
-                    ? (selectedItem === 'pop' ? 'pop clear!' : selectedItem === 'brain' ? 'NEW BRAIN' : selectedItem === 'flex' ? 'BIG FLEX' : 'FAMOUS ME')
-                    : (selectedItem === 'pop' ? 'pop clear!' : selectedItem === 'brain' ? 'NEW BRAIN' : selectedItem === 'flex' ? 'BIG FLEX' : 'FAMOUS ME')
-                  }
-                </div>
+                +{isKorean 
+                  ? (selectedItem === 'pop' ? '팝클리어' : selectedItem === 'brain' ? '뉴브레인' : selectedItem === 'flex' ? '빅플렉스' : '페이머스미')
+                  : (selectedItem === 'pop' ? 'POP CLEAR!' : selectedItem === 'brain' ? 'NEW BRAIN' : selectedItem === 'flex' ? 'BIG FLEX' : 'FAMOUS ME')
+                }
               </div>
             )}
           </div>
@@ -378,25 +324,151 @@ export default function ReceiptMain() {
           </div>
         )}
         {done && showNext && !selectedEnv && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
-              {isKorean ? '메인디쉬' : 'MAIN DISH'}
+          <>
+            {/* 제목과 부제목 */}
+            <div style={{ position: 'absolute', left: '50%', top: '15%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
+                {isKorean ? '메인디쉬' : 'MAIN DISH'}
+              </div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1, lineHeight: 1.4 }}>
+                {isKorean 
+                  ? (
+                    <>
+                      <div>시온을 어떤 환경에 내려놓을까요?</div>
+                    </>
+                  )
+                  : (
+                    <>
+                      <div>In which environment should we place Zion?</div>
+                    </>
+                  )
+                }
+              </div>
             </div>
-            <div style={{ color: '#fff', fontWeight: 700, fontSize: 18, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
-              {isKorean ? '시온을 어떤 환경에 내려놓을까요?' : 'In which environment should we place Zion?'}
-            </div>
-                          <div style={{ display: 'flex', gap: 16 }}>
-                <button onClick={() => setSelectedEnv('school')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+            {/* 환경 선택 버튼 가로 3개 배치 */}
+            <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 600, display: 'flex', gap: 20, alignItems: 'center', justifyContent: 'center' }}>
+              {/* 학교 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/clostu.png"
+                  alt="학교"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedEnv === 'school' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedEnv('school')} 
+                  style={{ 
+                    background: selectedEnv === 'school' ? '#fff' : '#666',
+                    color: selectedEnv === 'school' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
                   {isKorean ? '학교' : 'School'}
                 </button>
-                <button onClick={() => setSelectedEnv('work')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+              </div>
+              
+              {/* 회사 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/clowork.png"
+                  alt="회사"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedEnv === 'work' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedEnv('work')} 
+                  style={{ 
+                    background: selectedEnv === 'work' ? '#fff' : '#666',
+                    color: selectedEnv === 'work' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
                   {isKorean ? '회사' : 'Work'}
                 </button>
-                <button onClick={() => setSelectedEnv('friend')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+              </div>
+              
+              {/* 사회생활 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/clo1.png"
+                  alt="사회생활"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedEnv === 'friend' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedEnv('friend')} 
+                  style={{ 
+                    background: selectedEnv === 'friend' ? '#fff' : '#666',
+                    color: selectedEnv === 'friend' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
                   {isKorean ? '이외의 인간관계' : 'Social Life'}
                 </button>
               </div>
-          </div>
+            </div>
+            {/* 하단 환경 선택 버튼 */}
+            <button
+              style={{
+                position: 'absolute',
+                left: '50%',
+                bottom: 36,
+                transform: 'translateX(-50%)',
+                background: selectedEnv ? '#39ff14' : '#666',
+                color: '#fff',
+                fontWeight: 900,
+                fontSize: 18,
+                border: 'none',
+                borderRadius: 24,
+                padding: '12px 36px',
+                boxShadow: selectedEnv ? '0 2px 16px 0 #39ff1444' : '0 2px 16px 0 #666444',
+                cursor: selectedEnv ? 'pointer' : 'not-allowed',
+                letterSpacing: 1.1,
+                transition: 'background 0.2s, box-shadow 0.2s',
+                zIndex: 10,
+              }}
+              disabled={!selectedEnv}
+              onClick={() => {
+                // 환경 선택 완료 후 다음 단계로 진행
+                setShowNext(true);
+              }}
+            >
+              {isKorean ? '이 공간 고르기' : 'Choose This Environment'}
+            </button>
+          </>
         )}
         {done && showNext && selectedEnv && !showItemSelect && (
           <>
@@ -427,7 +499,7 @@ export default function ReceiptMain() {
               <span style={{ color: '#111', fontSize: 24, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
             {/* 제목과 부제목 */}
-            <div style={{ position: 'absolute', left: '50%', top: '30%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ position: 'absolute', left: '50%', top: '15%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
                 {isKorean ? '서브디쉬' : 'SIDE DISH'}
               </div>
@@ -448,12 +520,67 @@ export default function ReceiptMain() {
                 }
               </div>
             </div>
-            {/* 감정 선택 버튼 중앙 배치 */}
-            <div style={{ position: 'absolute', left: '50%', top: '60%', transform: 'translate(-50%, -50%)', width: 240, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
-              <EmotionButton label="놀란척" desc="상대의 말에 크게 놀란 듯한 리액션을 보입니다." onClick={() => setEmotion('놀란척')} />
-              <EmotionButton label="슬픈척" desc="상대의 슬픔에 깊이 공감하는 듯한 표정을 짓습니다." onClick={() => setEmotion('슬픈척')} />
-              <EmotionButton label="웃긴척" desc="상대의 이야기가 정말 웃긴 것처럼 크게 웃어줍니다." onClick={() => setEmotion('웃긴척')} />
-              <EmotionButton label="공감하는 척" desc="이야기를 듣고 완전히 놀란 척 리액션을 보입니다." onClick={() => setEmotion('공감하는 척')} />
+            {/* 감정 선택 버튼 2x2 그리드 배치 */}
+            <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 400, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, alignItems: 'center' }}>
+              {/* 놀란척 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/sur.png"
+                  alt="놀란척"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${emotion === '놀란척' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <EmotionButton label="놀란척" desc="상대의 말에 크게 놀란 듯한 리액션을 보입니다." onClick={() => setEmotion('놀란척')} isSelected={emotion === '놀란척'} />
+              </div>
+              
+              {/* 슬픈척 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/sad.png"
+                  alt="슬픈척"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${emotion === '슬픈척' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <EmotionButton label="슬픈척" desc="상대의 슬픔에 깊이 공감하는 듯한 표정을 짓습니다." onClick={() => setEmotion('슬픈척')} isSelected={emotion === '슬픈척'} />
+              </div>
+              
+              {/* 웃긴척 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/sm.png"
+                  alt="웃긴척"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${emotion === '웃긴척' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <EmotionButton label="웃긴척" desc="상대의 이야기가 정말 웃긴 것처럼 크게 웃어줍니다." onClick={() => setEmotion('웃긴척')} isSelected={emotion === '웃긴척'} />
+              </div>
+              
+              {/* 공감하는 척 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/ew.png"
+                  alt="공감하는 척"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${emotion === '공감하는 척' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <EmotionButton label="공감하는 척" desc="이야기를 듣고 완전히 놀란 척 리액션을 보입니다." onClick={() => setEmotion('공감하는 척')} isSelected={emotion === '공감하는 척'} />
+              </div>
             </div>
             {/* 하단 감정 구매하기 버튼 */}
             <button
@@ -537,125 +664,172 @@ export default function ReceiptMain() {
         )}
         {/* 구매 품목 선택창 */}
         {showItemSelect && !showReceipt && (
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 340,
-            background: '#39ff14',
-            borderRadius: 32,
-            boxShadow: '0 4px 32px #39ff1444',
-            padding: '48px 0 32px 0', // padding-top 늘림
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            zIndex: 100,
-          }}>
-            {/* 블랙박스(초록 바) 내부 좌측 상단에 뒤로가기 버튼 */}
+          <>
+            {/* 제목과 부제목 */}
+            <div style={{ position: 'absolute', left: '50%', top: '15%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
+                {isKorean ? '음료' : 'Beverage'}
+              </div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1, lineHeight: 1.4 }}>
+                {isKorean 
+                  ? (
+                    <>
+                      <div>완벽한 사회인이 되도록 아이템을 선택해주세요!</div>
+                    </>
+                  )
+                  : (
+                    <>
+                      <div>Choose an item to become a perfect social person!</div>
+                    </>
+                  )
+                }
+              </div>
+            </div>
+            {/* 음료 선택 버튼 2x2 그리드 배치 */}
+            <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 400, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, alignItems: 'center' }}>
+              {/* POP CLEAR! 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/pop.png"
+                  alt="POP CLEAR!"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedItem === 'pop' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedItem('pop')} 
+                  style={{ 
+                    background: selectedItem === 'pop' ? '#fff' : '#666',
+                    color: selectedItem === 'pop' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
+                  POP CLEAR!
+                </button>
+              </div>
+              
+              {/* NEW BRAIN 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/an.png"
+                  alt="NEW BRAIN"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedItem === 'brain' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedItem('brain')} 
+                  style={{ 
+                    background: selectedItem === 'brain' ? '#fff' : '#666',
+                    color: selectedItem === 'brain' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
+                  NEW BRAIN
+                </button>
+              </div>
+              
+              {/* BIG FLEX 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/flex.png"
+                  alt="BIG FLEX"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedItem === 'flex' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedItem('flex')} 
+                  style={{ 
+                    background: selectedItem === 'flex' ? '#fff' : '#666',
+                    color: selectedItem === 'flex' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
+                  BIG FLEX
+                </button>
+              </div>
+              
+              {/* FAMOUS ME 버튼과 이미지 */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                <img
+                  src="/gra/fa.png"
+                  alt="FAMOUS ME"
+                  style={{
+                    width: 140,
+                    height: 140,
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 2px 8px rgba(0,0,0,0.4)) ${selectedItem === 'famous' ? 'grayscale(0%)' : 'grayscale(100%)'}`,
+                  }}
+                />
+                <button 
+                  onClick={() => setSelectedItem('famous')} 
+                  style={{ 
+                    background: selectedItem === 'famous' ? '#fff' : '#666',
+                    color: selectedItem === 'famous' ? '#111' : '#fff',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '8px 16px',
+                    width: '100%',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s, color 0.2s',
+                  }}
+                >
+                  FAMOUS ME
+                </button>
+              </div>
+            </div>
+            {/* 하단 선택 완료 버튼 */}
             <button
-              onClick={() => { setShowItemSelect(false); setSelectedItem(null); }}
               style={{
                 position: 'absolute',
-                top: 16,
-                left: 16,
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                background: '#222',
+                left: '50%',
+                bottom: 36,
+                transform: 'translateX(-50%)',
+                background: selectedItem ? '#39ff14' : '#666',
                 color: '#fff',
-                border: 'none',
-                fontSize: 22,
-                fontWeight: 900,
-                boxShadow: '0 2px 8px #1112',
-                cursor: 'pointer',
-                zIndex: 120,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.2s',
-              }}
-            >
-              <span style={{ color: '#fff', fontSize: 18, fontWeight: 900, marginLeft: -1 }}>◀</span>
-            </button>
-            <div style={{ color: '#fff', fontWeight: 900, fontSize: 26, marginBottom: 8, letterSpacing: 1.1, marginTop: 8 }}>
-              {isKorean ? '음료' : 'Beverage'}
-            </div>
-            <div style={{ color: '#fff', fontWeight: 500, fontSize: 14, marginBottom: 24, letterSpacing: 0.5, textAlign: 'center', lineHeight: 1.3 }}>
-              {isKorean 
-                ? '완벽한 사회인이 되도록 아이템을 선택해주세요!'
-                : 'Choose an item to become a perfect social person!'
-              }
-            </div>
-            <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
-              {ITEM_LIST.map(item => (
-                <div key={item.key} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
-                  <button
-                    onClick={() => setSelectedItem(item.key)}
-                    style={{
-                      width: '100%',
-                      background: selectedItem === item.key ? '#fff' : '#232526',
-                      color: selectedItem === item.key ? '#39ff14' : '#fff',
-                      fontWeight: 700,
-                      fontSize: 18,
-                      border: 'none',
-                      borderRadius: 20,
-                      padding: '14px 0',
-                      cursor: 'pointer',
-                      boxShadow: selectedItem === item.key ? '0 2px 12px #39ff1444' : 'none',
-                      transition: 'background 0.2s, color 0.2s',
-                      marginBottom: 4,
-                    }}
-                    onMouseEnter={e => {
-                      const tooltip = e.currentTarget.nextSibling;
-                      if (tooltip) tooltip.style.opacity = 1;
-                    }}
-                    onMouseLeave={e => {
-                      const tooltip = e.currentTarget.nextSibling;
-                      if (tooltip) tooltip.style.opacity = 0;
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                  <div style={{
-                    fontSize: 12,
-                    color: '#000',
-                    fontWeight: 700,
-                    textAlign: 'center',
-                    lineHeight: 1.2,
-                    position: 'absolute',
-                    top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: '#fff',
-                    padding: '6px 10px',
-                    borderRadius: 6,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    transition: 'opacity 0.2s',
-                    whiteSpace: 'nowrap',
-                    zIndex: 10,
-                  }}>
-                    {item.desc}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* 선택 완료 버튼(추후 기능 확장 가능) */}
-            <button
-              style={{
-                marginTop: 32,
-                background: selectedItem ? '#ff00cc' : '#bbb',
-                color: selectedItem ? '#fff' : '#888',
                 fontWeight: 900,
                 fontSize: 18,
                 border: 'none',
                 borderRadius: 24,
-                padding: '12px 44px',
+                padding: '12px 36px',
+                boxShadow: selectedItem ? '0 2px 16px 0 #39ff1444' : '0 2px 16px 0 #666444',
                 cursor: selectedItem ? 'pointer' : 'not-allowed',
-                boxShadow: selectedItem ? '0 0 16px 4px #ff00cc88, 0 2px 12px #ff99ff44' : '0 2px 12px #bbb8',
-                transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                letterSpacing: 1.1,
+                transition: 'background 0.2s, box-shadow 0.2s',
+                zIndex: 10,
               }}
               disabled={!selectedItem}
               onClick={() => {
@@ -673,7 +847,7 @@ export default function ReceiptMain() {
             >
               {isKorean ? '선택 완료' : 'Complete Selection'}
             </button>
-          </div>
+          </>
         )}
         {/* 결과 영수증(계산서) 화면 */}
         {showItemSelect && showReceipt && (
@@ -964,18 +1138,18 @@ export default function ReceiptMain() {
   );
 }
 
-function EmotionButton({ label, desc, onClick }) {
+function EmotionButton({ label, desc, onClick, isSelected }) {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <button
         style={{
-          background: '#fff',
-          color: '#111',
+          background: isSelected ? '#fff' : '#666',
+          color: isSelected ? '#111' : '#fff',
           fontWeight: 700,
-          fontSize: 16,
+          fontSize: 14,
           border: 'none',
-          borderRadius: 20,
-          padding: '12px 0',
+          borderRadius: 12,
+          padding: '8px 16px',
           width: '100%',
           cursor: 'pointer',
           marginBottom: 0,
