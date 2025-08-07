@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import GLBPersonaAnimation from './GLBPersonaAnimation';
 import { useRouter } from 'next/router';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const LOADING_STEPS = [
   { glb: '/3d/main.glb', label: null },
@@ -33,6 +34,7 @@ function Spinner() {
 }
 
 export default function ReceiptMain() {
+  const { isKorean, isEnglish } = useLanguage();
   const [animate, setAnimate] = useState(false);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -72,21 +74,64 @@ export default function ReceiptMain() {
   const [showItemSelect, setShowItemSelect] = useState(false); // 구매 품목 선택창 표시
   const [selectedItem, setSelectedItem] = useState(null); // 선택된 품목
   const ITEM_LIST = [
-    { key: 'pop', label: 'pop clear!', desc: '담배 한모금' },
+    { key: 'pop', label: 'POP CLEAR!', desc: '담배 한모금' },
     { key: 'brain', label: 'NEW BRAIN', desc: '생각이 안날땐 지피티를!' },
     { key: 'flex', label: 'BIG FLEX', desc: '남들보다 못나가는 것 처럼 보일 수 없지' },
     { key: 'famous', label: 'FAMOUS ME', desc: '행복한 나의 모습을 만들어서라도 보여주자!' },
   ];
   const [showReceipt, setShowReceipt] = useState(false); // 결과 영수증 표시
   const [receiptStep, setReceiptStep] = useState(0); // 영수증 줄 순차 표시
-  const FINAL_RESULTS = [
-    'SO, WHO ARE YOU?',
-  ];
+  // 환경별 평판
+  const ENV_REPUTATION = {
+    school: '성실하다고',
+    work: '유능하다고',
+    friend: '친절하다고',
+  };
+  const ENV_REPUTATION_EN = {
+    school: 'diligent',
+    work: 'competent',
+    friend: 'kind',
+  };
+  
+  // 음료별 설명
+  const DRINK_DESCRIPTION = {
+    pop: '자신이 내지 않은 아이디어에 대해',
+    brain: 'AI에게 의존하게 되어',
+    flex: '자신감을 과도하게 표현했지만',
+    famous: '가짜 행복을 연기했지만',
+  };
+  const DRINK_DESCRIPTION_EN = {
+    pop: 'ideas they didn\'t come up with',
+    brain: 'becoming dependent on AI',
+    flex: 'overexpressing confidence',
+    famous: 'faking happiness',
+  };
+  
+  // 최종 결과 생성 함수
+  const generateFinalResult = () => {
+    const reputation = ENV_REPUTATION[selectedEnv];
+    const drinkDesc = DRINK_DESCRIPTION[selectedItem];
+    
+    return `${reputation} 소문이 나있던 시온은 ${drinkDesc} 책임을 감당해야하는 결말을 맞이했습니다.`;
+  };
+  
+  // 영어 최종 결과 생성 함수
+  const generateFinalResultEN = () => {
+    const reputation = ENV_REPUTATION_EN[selectedEnv];
+    const drinkDesc = DRINK_DESCRIPTION_EN[selectedItem];
+    
+    return `Zion, who was rumored to be ${reputation}, ended up having to take responsibility for ${drinkDesc}.`;
+  };
   // 각 선택별 결과 문구 프리셋
   const ENV_RESULT = {
     school: '적응을 위해 자신을 속였어요',
     work: '생존을 위해 자신을 감췄어요',
     friend: '관계를 위해 자신을 포장했어요',
+  };
+  const ENV_RESULT_EN = {
+    school: 'Lied to oneself for adaptation',
+    work: 'Hid oneself for survival',
+    friend: 'Packaged oneself for relationships',
   };
   const EMOTION_RESULT = {
     '놀란척': '진심을 숨겼어요',
@@ -94,11 +139,23 @@ export default function ReceiptMain() {
     '웃긴척': '억지로 웃었어요',
     '공감하는 척': '마음을 감췄어요',
   };
+  const EMOTION_RESULT_EN = {
+    '놀란척': 'Hidden true feelings',
+    '슬픈척': 'Faked empathy',
+    '웃긴척': 'Forced laughter',
+    '공감하는 척': 'Concealed emotions',
+  };
   const ITEM_RESULT = {
     pop: '담배 한모금으로 스트레스를 잠시 잊었어요',
     brain: 'AI에게 의존하게 되었어요',
     flex: '자신감을 과도하게 표현했어요',
     famous: '가짜 행복을 연기했어요',
+  };
+  const ITEM_RESULT_EN = {
+    pop: 'Forgot stress temporarily with a cigarette',
+    brain: 'Became dependent on AI',
+    flex: 'Overexpressed confidence',
+    famous: 'Faked happiness',
   };
   const [bgBlack, setBgBlack] = useState(false); // 3D 배경 블랙 전환
   const [showRetry, setShowRetry] = useState(false); // 새로운 식사 시도 문구 표시
@@ -176,37 +233,169 @@ export default function ReceiptMain() {
           selectedEnv={selectedEnv}
           bgBlack={bgBlack}
         />
+        
+        {/* 선택 내역 표시 */}
+        {selectedEnv && (
+          <div style={{
+            position: 'absolute',
+            left: 40,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16,
+            zIndex: 50,
+          }}>
+            {/* 환경 선택 */}
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+                              <img
+                  src={`/gra/${selectedEnv === 'school' ? 'clostu.png' : selectedEnv === 'work' ? 'clowork.png' : 'clo1.png'}`}
+                  alt="environment"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
+                  }}
+                />
+              <div style={{
+                background: 'rgba(57, 255, 20, 0.9)',
+                color: '#000',
+                padding: '8px 16px',
+                borderRadius: 20,
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                boxShadow: '0 2px 8px rgba(57, 255, 20, 0.3)',
+                border: '2px solid rgba(57, 255, 20, 0.5)',
+              }}>
+                +{isKorean 
+                  ? (selectedEnv === 'school' ? '학생' : selectedEnv === 'work' ? '회사원' : '사회생활')
+                  : (selectedEnv === 'school' ? 'Student' : selectedEnv === 'work' ? 'Worker' : 'Social Life')
+                }
+              </div>
+            </div>
+            
+            {/* 감정 선택 */}
+            {emotion && (
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+              }}>
+                <img
+                  src={`/gra/${emotion === '놀란척' ? 'sur.png' : emotion === '슬픈척' ? 'sad.png' : emotion === '웃긴척' ? 'sm.png' : 'ew.png'}`}
+                  alt="emotion"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
+                  }}
+                />
+                <div style={{
+                  background: 'rgba(255, 0, 204, 0.9)',
+                  color: '#fff',
+                  padding: '8px 16px',
+                  borderRadius: 20,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  letterSpacing: 0.5,
+                  boxShadow: '0 2px 8px rgba(255, 0, 204, 0.3)',
+                  border: '2px solid rgba(255, 0, 204, 0.5)',
+                }}>
+                  +{isKorean 
+                    ? (emotion === '놀란척' ? '놀란척' : emotion === '슬픈척' ? '슬픈척' : emotion === '웃긴척' ? '웃긴척' : '공감하는척')
+                    : (emotion === '놀란척' ? 'Surprised' : emotion === '슬픈척' ? 'Sad' : emotion === '웃긴척' ? 'Laughing' : 'Empathetic')
+                  }
+                </div>
+              </div>
+            )}
+            
+            {/* 음료 선택 */}
+            {selectedItem && (
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+              }}>
+                <img
+                  src={`/gra/${selectedItem === 'pop' ? 'pop.png' : selectedItem === 'brain' ? 'an.png' : selectedItem === 'flex' ? 'flex.png' : 'fa.png'}`}
+                  alt="beverage"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
+                  }}
+                />
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  color: '#000',
+                  padding: '8px 16px',
+                  borderRadius: 20,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  letterSpacing: 0.5,
+                  boxShadow: '0 2px 8px rgba(255, 255, 255, 0.3)',
+                  border: '2px solid rgba(255, 255, 255, 0.5)',
+                }}>
+                  +{isKorean 
+                    ? (selectedItem === 'pop' ? 'pop clear!' : selectedItem === 'brain' ? 'NEW BRAIN' : selectedItem === 'flex' ? 'BIG FLEX' : 'FAMOUS ME')
+                    : (selectedItem === 'pop' ? 'pop clear!' : selectedItem === 'brain' ? 'NEW BRAIN' : selectedItem === 'flex' ? 'BIG FLEX' : 'FAMOUS ME')
+                  }
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div style={{ flex: 1, height: '100vh', background: step === 5 ? '#111' : '#39ff14', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {loading && step > 0 && step < 6 && !done && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 8, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55', whiteSpace: 'nowrap' }}>
-              필요없는 개성을 모두 제거합니다
+              {isKorean ? '필요없는 개성을 모두 제거합니다' : 'Removing all unnecessary personality traits'}
             </div>
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 20, marginBottom: 18, textAlign: 'center', letterSpacing: 1.1, textShadow: '0 2px 8px #1a1a1a55' }}>
-              {LOADING_STEPS[step].label}
+              {isKorean ? LOADING_STEPS[step].label : LOADING_STEPS[step].label}
             </div>
             <Spinner />
           </div>
         )}
         {done && !showNext && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#fff', fontWeight: 700, fontSize: 24, textAlign: 'center', letterSpacing: 1.2 }}>
-            완료되었습니다!
+            {isKorean ? '완료되었습니다!' : 'Completed!'}
           </div>
         )}
         {done && showNext && !selectedEnv && (
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
-              메인디쉬
+              {isKorean ? '메인디쉬' : 'MAIN DISH'}
             </div>
             <div style={{ color: '#fff', fontWeight: 700, fontSize: 18, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1 }}>
-              시온을 어떤 환경에 내려놓을까요?
+              {isKorean ? '시온을 어떤 환경에 내려놓을까요?' : 'In which environment should we place Zion?'}
             </div>
-            <div style={{ display: 'flex', gap: 16 }}>
-              <button onClick={() => setSelectedEnv('school')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>학교</button>
-              <button onClick={() => setSelectedEnv('work')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>회사</button>
-              <button onClick={() => setSelectedEnv('friend')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>이외의 인간관계</button>
-            </div>
+                          <div style={{ display: 'flex', gap: 16 }}>
+                <button onClick={() => setSelectedEnv('school')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+                  {isKorean ? '학교' : 'School'}
+                </button>
+                <button onClick={() => setSelectedEnv('work')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+                  {isKorean ? '회사' : 'Work'}
+                </button>
+                <button onClick={() => setSelectedEnv('friend')} style={{ background: '#fff', color: '#111', fontWeight: 700, fontSize: 18, border: 'none', borderRadius: 24, padding: '12px 32px', cursor: 'pointer' }}>
+                  {isKorean ? '이외의 인간관계' : 'Social Life'}
+                </button>
+              </div>
           </div>
         )}
         {done && showNext && selectedEnv && !showItemSelect && (
@@ -240,10 +429,23 @@ export default function ReceiptMain() {
             {/* 제목과 부제목 */}
             <div style={{ position: 'absolute', left: '50%', top: '30%', transform: 'translate(-50%, -50%)', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ color: '#fff', fontWeight: 900, fontSize: 28, marginBottom: 8, textAlign: 'center', letterSpacing: 1.2 }}>
-                서브디쉬
+                {isKorean ? '서브디쉬' : 'SIDE DISH'}
               </div>
               <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 32, textAlign: 'center', letterSpacing: 1.1, lineHeight: 1.4 }}>
-                시온의 주변인이 대화중 반응을 기대하고 있어요.<br/>어떤 반응을 보이게 할까요?
+                {isKorean 
+                  ? (
+                    <>
+                      <div>시온의 주변인이 대화중 반응을 기대하고 있어요.</div>
+                      <div>어떤 반응을 보이게 할까요?</div>
+                    </>
+                  )
+                  : (
+                    <>
+                      <div>People around Zion expect reactions during conversations.</div>
+                      <div>What reaction should we show?</div>
+                    </>
+                  )
+                }
               </div>
             </div>
             {/* 감정 선택 버튼 중앙 배치 */}
@@ -281,8 +483,56 @@ export default function ReceiptMain() {
                 }, 100);
               }}
             >
-              이 감정 구매하기
+              {isKorean ? '이 감정 구매하기' : 'Purchase This Emotion'}
             </button>
+            
+            {/* $ 애니메이션 오버레이 */}
+            {dollarPop && (
+              <div style={{
+                position: 'absolute',
+                left: '50%',
+                bottom: 36,
+                transform: 'translateX(-50%)',
+                zIndex: 15,
+                pointerEvents: 'none',
+              }}>
+                {[...Array(8)].map((_, i) => {
+                  const xOffset = (Math.random() - 0.5) * 120;
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        position: 'absolute',
+                        color: '#39ff14',
+                        fontSize: 20,
+                        fontWeight: 900,
+                        animation: `dollar-float 1.2s ease-out ${i * 0.1}s both`,
+                        textShadow: '0 2px 8px rgba(57, 255, 20, 0.8)',
+                        '--x-offset': `${xOffset}px`,
+                      }}
+                    >
+                      $
+                    </div>
+                  );
+                })}
+                <style jsx>{`
+                  @keyframes dollar-float {
+                    0% {
+                      opacity: 0;
+                      transform: translate(0, 0) scale(0.5);
+                    }
+                    20% {
+                      opacity: 1;
+                      transform: translate(var(--x-offset, 0px), -20px) scale(1.2);
+                    }
+                    100% {
+                      opacity: 0;
+                      transform: translate(var(--x-offset, 0px), -80px) scale(0.8);
+                    }
+                  }
+                `}</style>
+              </div>
+            )}
           </>
         )}
         {/* 구매 품목 선택창 */}
@@ -329,10 +579,13 @@ export default function ReceiptMain() {
               <span style={{ color: '#fff', fontSize: 18, fontWeight: 900, marginLeft: -1 }}>◀</span>
             </button>
             <div style={{ color: '#fff', fontWeight: 900, fontSize: 26, marginBottom: 8, letterSpacing: 1.1, marginTop: 8 }}>
-              음료
+              {isKorean ? '음료' : 'Beverage'}
             </div>
             <div style={{ color: '#fff', fontWeight: 500, fontSize: 14, marginBottom: 24, letterSpacing: 0.5, textAlign: 'center', lineHeight: 1.3 }}>
-              완벽한 사회인이 되도록 아이템을 선택해주세요!
+              {isKorean 
+                ? '완벽한 사회인이 되도록 아이템을 선택해주세요!'
+                : 'Choose an item to become a perfect social person!'
+              }
             </div>
             <div style={{ width: 260, display: 'flex', flexDirection: 'column', gap: 18, alignItems: 'center' }}>
               {ITEM_LIST.map(item => (
@@ -418,7 +671,7 @@ export default function ReceiptMain() {
                 setTimeout(() => setBgBlack(true), 4200); // 영수증 다 나오고 배경 블랙
               }}
             >
-              선택 완료
+              {isKorean ? '선택 완료' : 'Complete Selection'}
             </button>
           </div>
         )}
@@ -483,7 +736,7 @@ export default function ReceiptMain() {
               }
             `}</style>
             <div style={{ color: '#222', fontWeight: 900, fontSize: 22, marginBottom: 18, letterSpacing: 1.1 }}>
-              영수증
+              {isKorean ? '영수증' : 'Receipt'}
             </div>
             {/* 환경 */}
             {receiptStep > 0 && (
@@ -497,7 +750,7 @@ export default function ReceiptMain() {
                   marginBottom: 0,
                   animation: 'receipt-line-print 0.3s ease-out',
                   transformOrigin: 'top',
-                }}>환경</div>
+                }}>{isKorean ? '환경' : 'Environment'}</div>
                 <div style={{ 
                   color: '#fff', 
                   fontSize: 18, 
@@ -507,7 +760,7 @@ export default function ReceiptMain() {
                   marginBottom: 0,
                   animation: 'receipt-line-print 0.3s ease-out 0.1s both',
                   transformOrigin: 'top',
-                }}>{selectedEnv === 'school' ? '학교' : selectedEnv === 'work' ? '직장' : '인간관계'}</div>
+                }}>{selectedEnv === 'school' ? (isKorean ? '학교' : 'School') : selectedEnv === 'work' ? (isKorean ? '직장' : 'Work') : (isKorean ? '인간관계' : 'Social Life')}</div>
               </>
             )}
             {receiptStep > 1 && (
@@ -520,7 +773,7 @@ export default function ReceiptMain() {
                 marginBottom: 16,
                 animation: 'receipt-line-print 0.3s ease-out',
                 transformOrigin: 'top',
-              }}>{ENV_RESULT[selectedEnv]}</div>
+                              }}>{isKorean ? ENV_RESULT[selectedEnv] : ENV_RESULT_EN[selectedEnv]}</div>
             )}
             {receiptStep > 1 && (
               <div style={{ 
@@ -542,7 +795,7 @@ export default function ReceiptMain() {
                   marginBottom: 0,
                   animation: 'receipt-line-print 0.3s ease-out',
                   transformOrigin: 'top',
-                }}>감정</div>
+                }}>{isKorean ? '감정' : 'Emotion'}</div>
                 <div style={{ 
                   color: '#fff', 
                   fontSize: 18, 
@@ -565,7 +818,7 @@ export default function ReceiptMain() {
                 marginBottom: 16,
                 animation: 'receipt-line-print 0.3s ease-out',
                 transformOrigin: 'top',
-              }}>{EMOTION_RESULT[emotion]}</div>
+                              }}>{isKorean ? EMOTION_RESULT[emotion] : EMOTION_RESULT_EN[emotion]}</div>
             )}
             {receiptStep > 3 && (
               <div style={{ 
@@ -610,7 +863,7 @@ export default function ReceiptMain() {
                 marginBottom: 24,
                 animation: 'receipt-line-print 0.3s ease-out',
                 transformOrigin: 'top',
-              }}>{ITEM_RESULT[selectedItem]}</div>
+                              }}>{isKorean ? ITEM_RESULT[selectedItem] : ITEM_RESULT_EN[selectedItem]}</div>
             )}
             {/* 구분선, 오늘 식사의 가격은, 최종 결과 */}
             {receiptStep >= 5 && (
@@ -638,19 +891,20 @@ export default function ReceiptMain() {
                   animation: 'receipt-line-print 0.4s ease-out 0.2s both',
                   transformOrigin: 'top',
                 }}>
-                  오늘 식사의 가격은?
+                  {isKorean ? '오늘 식사의 가격은?' : 'What is the price of today\'s meal?'}
                 </div>
                 <div style={{ 
                   color: '#ff00cc', 
                   fontWeight: 900, 
-                  fontSize: 20, 
+                  fontSize: 16, 
                   marginTop: 8, 
                   textAlign: 'center', 
                   width: 260,
                   animation: 'receipt-line-print 0.4s ease-out 0.3s both',
                   transformOrigin: 'top',
+                  lineHeight: 1.4,
                 }}>
-                  {FINAL_RESULTS[Math.floor(Math.random() * FINAL_RESULTS.length)]}
+                  {isKorean ? generateFinalResult() : generateFinalResultEN()}
                 </div>
                 {showRetry && (
                   <button
@@ -673,7 +927,7 @@ export default function ReceiptMain() {
                     }}
                     onClick={() => router.push('/')}
                   >
-                    새로운 구매를 진행해보시겠어요?
+                    {isKorean ? '새로운 구매를 진행해보시겠어요?' : 'Would you like to try a new purchase?'}
                   </button>
                 )}
               </>

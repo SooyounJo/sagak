@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { LanguageProvider } from '../contexts/LanguageContext';
 
 function MagentaCursor() {
   const cursorRef = useRef(null);
@@ -137,14 +138,14 @@ function AutoRedirect() {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <>
+    <LanguageProvider>
       <AutoRedirect />
       <MagentaCursor />
       <Component {...pageProps} />
       <style jsx global>{`
         html, body, * { cursor: none !important; }
       `}</style>
-    </>
+    </LanguageProvider>
   );
 }
 
